@@ -1,8 +1,10 @@
-#mineTD                   
+#MineTD                   
 ##Map 
 - tile base, with diferent mineable matereals
 - scrol around 
-- random gerneration
+- random gerneration.
+
+ nothing fancy to begin with, maby a predrawn tununel system that is subtrakted form randumly placed boxes
 - generate path graph
 
 ##Building
