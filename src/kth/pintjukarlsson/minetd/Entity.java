@@ -12,7 +12,6 @@ public class Entity {
 		pos = new Vector2(x, y);
 	}
 	
-	
 	public Vector2 getPos() {
 		return pos;
 	}
