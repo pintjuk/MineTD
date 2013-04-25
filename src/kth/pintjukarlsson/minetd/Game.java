@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,17 +18,20 @@ public class Game extends com.badlogic.gdx.Game {
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
 	private InputMultiplexer InMultiplexer;
+	private AssetManager assetManager;
 	private GameMap level;
 	@Override
 	public void create() {		
 		InMultiplexer = new InputMultiplexer();
 		Gdx.input.setInputProcessor(InMultiplexer);
+		assetManager = new AssetManager();
 		
 		setupCam();
 		
 		batch = new SpriteBatch();
 		
-		
+		level = new GameMap();
+		level.loadAssets(assetManager);
 	}
 
 	private void setupCam() {
@@ -44,18 +48,28 @@ public class Game extends com.badlogic.gdx.Game {
 	@Override
 	public void dispose() {
 		batch.dispose();
-		texture.dispose();
+		assetManager.dispose();
+		
 	}
-
+	
+	/**
+	 * is it not obvieus
+	 */
 	@Override
-	public void render() {		
+	public void render() {	
+		//update game
+		updateGame();
+		//rander 
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		
+		level.Draw(camera);
 		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
-		sprite.draw(batch);
-		batch.end();
+		
+	}
+
+	private void updateGame() {
+		camera.update();
+		
 	}
 
 	@Override
