@@ -38,7 +38,7 @@ public interface Graph {
 	 * @throws IllegalArgumentException
 	 *             if v is out of range
 	 */
-	int degree(int v) throws IllegalArgumentException;
+	int degree(ImuteblePosition v) throws IllegalArgumentException;
 
 	/**
 	 * Returns an iterator of vertices adjacent to v.
@@ -49,7 +49,7 @@ public interface Graph {
 	 * @throws IllegalArgumentException
 	 *             if v is out of range
 	 */
-	VertexIterator neighbors(int v) throws IllegalArgumentException;
+	VertexIterator neighbors(ImuteblePosition v) throws IllegalArgumentException;
 
 	/**
 	 * Returns true if there is an edge from v to w.
@@ -62,21 +62,9 @@ public interface Graph {
 	 * @throws IllegalArgumentException
 	 *             if v or w are out of range
 	 */
-	boolean hasEdge(int v, int w) throws IllegalArgumentException;
+	boolean hasEdge(ImuteblePosition v, ImuteblePosition w) throws IllegalArgumentException;
 
-	/**
-	 * Returns the edge cost if v and w are adjacent and an edge cost has been
-	 * assigned, NO_COST otherwise.
-	 * 
-	 * @param v
-	 *            vertex
-	 * @param w
-	 *            vertex
-	 * @return edge cost if available, NO_COST otherwise
-	 * @throws IllegalArgumentException
-	 *             if v or w are out of range
-	 */
-	int cost(int v, int w) throws IllegalArgumentException;
+
 
 	/**
 	 * Inserts a directed edge. (No edge cost is assigned.)
@@ -88,23 +76,9 @@ public interface Graph {
 	 * @throws IllegalArgumentException
 	 *             if from or to are out of range
 	 */
-	void add(int from, int to) throws IllegalArgumentException;
+	void add(ImuteblePosition from, ImuteblePosition to) throws IllegalArgumentException;
 
-	/**
-	 * Inserts an edge with edge cost c.
-	 * 
-	 * @param c
-	 *            edge cost, c >= 0
-	 * @param from
-	 *            vertex
-	 * @param to
-	 *            vertex
-	 * @throws IllegalArgumentException
-	 *             if from or to are out of range
-	 * @throws IllegalArgumentException
-	 *             if c < 0
-	 */
-	void add(int from, int to, int c) throws IllegalArgumentException;
+	
 
 	/**
 	 * Inserts two edges between v and w. (No edge cost is assigned.)
@@ -116,23 +90,9 @@ public interface Graph {
 	 * @throws IllegalArgumentException
 	 *             if v or w are out of range
 	 */
-	void addBi(int v, int w) throws IllegalArgumentException;
+	void addBi(ImuteblePosition v, ImuteblePosition w) throws IllegalArgumentException;
 
-	/**
-	 * Inserts edges with edge cost c between v and w.
-	 * 
-	 * @param c
-	 *            edge cost, c >= 0
-	 * @param v
-	 *            vertex
-	 * @param w
-	 *            vertex
-	 * @throws IllegalArgumentException
-	 *             if v or w are out of range
-	 * @throws IllegalArgumentException
-	 *             if c < 0
-	 */
-	void addBi(int v, int w, int c) throws IllegalArgumentException;
+	
 
 	/**
 	 * Removes the edge.
@@ -144,7 +104,7 @@ public interface Graph {
 	 * @throws IllegalArgumentException
 	 *             if from or to are out of range
 	 */
-	void remove(int from, int to) throws IllegalArgumentException;
+	void remove(ImuteblePosition from, ImuteblePosition to) throws IllegalArgumentException;
 
 	/**
 	 * Removes the edges between v and w.
@@ -156,5 +116,5 @@ public interface Graph {
 	 * @throws IllegalArgumentException
 	 *             if v or w are out of range
 	 */
-	void removeBi(int v, int w) throws IllegalArgumentException;
+	void removeBi(ImuteblePosition v, ImuteblePosition w) throws IllegalArgumentException;
 }

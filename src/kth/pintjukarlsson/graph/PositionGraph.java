@@ -20,7 +20,7 @@ public class PositionGraph implements Graph {
 	 * from v to w; c is the cost assigned to this edge. The maps may be null
 	 * and are allocated only when needed.
 	 */
-	private final Hashtable<Integer, ArrayList<Integer[]>> edges;
+	private final Hashtable<Integer, ArrayList<ImuteblePosition>> edges;
 	private int width;
 	private int hight;
 	private int numEdges=0;
@@ -33,9 +33,11 @@ public class PositionGraph implements Graph {
 	 *             if n < 0
 	 */
 	public PositionGraph(int w, int h) {
-		if (n < 0)
-			throw new IllegalArgumentException("n = " + n);
-		edges = new Hashtable<Integer, ArrayList<Integer[]>>(w*h+1);
+		if (w < 0)
+			throw new IllegalArgumentException("w = " + w);
+		if (h < 0)
+			throw new IllegalArgumentException("h = " + h);
+		edges = new Hashtable<Integer, ArrayList<ImuteblePosition>>(w*h+1);
 		width=w;hight=h;
 		
 	}
@@ -43,29 +45,16 @@ public class PositionGraph implements Graph {
 	/**
 	 * Add an edge without checking parameters.
 	 */
-	private void addEdge(int from, ImuteblePosition to, ImuteblePosition cost) {
-		if(edges.get(from)==null){
-			edges.put(from, new ArrayList<Integer[]>());
+	private void addEdge(ImuteblePosition from, ImuteblePosition to) {
+		if(edges.get(from.hashCode())==null){
+			edges.put(from.hashCode(), new ArrayList<ImuteblePosition>());
 		}
 		for(int i = 0; i<edges.get(from).size();i++){
-			if(edges.get(from).get(i)[0]==to){
-				edges.get(from).remove(i);
-				numEdges--;
-			}
+			if(edges.get(from.hashCode()).get(i).equals(to))
+				return;
 		}
-		int isBacklink=0;
 		numEdges++;
-		if(edges.get(to)!=null){
-			for(int i = 0; i<edges.get(to).size();i++){
-				if(edges.get(to).get(i)[0]==from){
-					isBacklink=1;
-					break;
-				}
-			}
-		}
-		
-		
-		edges.get(from).add(new Integer[]{to, cost, isBacklink});
+		edges.get(from.hashCode()).add(to);
 		
 	}
 
@@ -74,7 +63,7 @@ public class PositionGraph implements Graph {
 	 */
 	@Override
 	public int numVertices() {
-		return vertices;
+		return width*hight;
 	}
 
 	/**
@@ -89,8 +78,8 @@ public class PositionGraph implements Graph {
 	 * {@inheritDoc Graph}
 	 */
 	@Override
-	public int degree(int v) throws IllegalArgumentException {
-	    boolean[] links = new boolean[numVertices()];
+	public int degree(ImuteblePosition v) throws IllegalArgumentException {
+	 /*   boolean[] links = new boolean[numVertices()];
 		for(int i = 0; i<=vertices;i++){
 			if(edges.get(i)!=null)
 				if(edges.get(i)!=null)
@@ -110,13 +99,15 @@ public class PositionGraph implements Graph {
 			if(b)
 				counts++;
 		}
-		return counts;
+		return counts;*/
+		return 0;
 	}
 	
 	static class VertecisIt implements VertexIterator{
 		int counter=0;
-		ArrayList<Integer[]> v;
-		public VertecisIt(ArrayList<Integer[]> vertecis){v=vertecis;}
+		ArrayList<ImuteblePosition> v;
+		public VertecisIt(ArrayList<ImuteblePosition> vertecis){v=vertecis;}
+		
 		@Override
 		public boolean hasNext() {
 			if (v==null)
@@ -124,12 +115,13 @@ public class PositionGraph implements Graph {
 			boolean t =counter<v.size();
 			return t;
 		}
+		
 
 		@Override
-		public int next() throws NoSuchElementException {
+		public ImuteblePosition next() throws NoSuchElementException {
 			if(!hasNext())
 				throw new NoSuchElementException();
-			return v.get(counter++)[0];
+			return v.get(counter++);
 		}
 		
 	}
@@ -138,96 +130,67 @@ public class PositionGraph implements Graph {
 	 * {@inheritDoc Graph}
 	 */
 	@Override
-	public VertexIterator neighbors(int v) {
-		return new VertecisIt( edges.get(v));
+	public VertexIterator neighbors(ImuteblePosition v) {
+		return new VertecisIt( edges.get(v.hashCode()));
 	}
 
 	/**
 	 * {@inheritDoc Graph}
 	 */
 	@Override
-	public boolean hasEdge(int v, int w) {
-		if(edges.get(v)==null)
+	public boolean hasEdge(ImuteblePosition v, ImuteblePosition w) {
+		if(edges.get(v.hashCode())==null)
 			return false;
-		for(Integer[] edg: edges.get(v)){
-			 if(edg[0]==w)
+		for(ImuteblePosition edg: edges.get(v.hashCode())){
+			 if(edg.equals(w))
 				 return true;
 		}
 		return false;
 	}
 
-	/**
-	 * {@inheritDoc Graph}
-	 */
-	@Override
-	public int cost(int v, int w) throws IllegalArgumentException {
-		if(edges.get(v)==null)
-			return NO_COST;
-		for(Integer[] edg: edges.get(v)){
-			 if(edg[0]==w)
-				 return edg[1];
-		}
-		return NO_COST;
-	}
+	
 	
 	/**
 	 * checks that input invariants hold for add functions
 	 * returns fals if invarants hold
 	 */
-	private boolean addInvariantchek(int v, int w){
-		return 0>v&&v>vertices&&0>w&&w>vertices;
+	private boolean addInvariantchek(ImuteblePosition v, ImuteblePosition w){
+		return 0>v.getX()&&v.getX()>width&&
+				0>v.getY()&&v.getY()>hight&&
+				0>w.getX()&&w.getX()>width&&
+				0>w.getY()&&w.getY()>hight;
 	}
-	private boolean addInvariantchek(int v, int w, int c){
-		return addInvariantchek(v, w)&&(c<0);
-	}
+	
 	/**
 	 * {@inheritDoc Graph}
 	 */
 	@Override
-	public void add(int from, int to) {
+	public void add(ImuteblePosition from, ImuteblePosition to) {
 		if(addInvariantchek(from, to))
 			throw new IllegalArgumentException("from or to is outside of the range of cornerns");
-		this.addEdge(from, to, NO_COST);
+		this.addEdge(from, to);
 		
 	}
 
-	/**
-	 * {@inheritDoc Graph}
-	 */
-	@Override
-	public void add(int from, int to, int c) {
-		if(addInvariantchek(from, to, c))
-			throw new IllegalArgumentException("from or to is outside of the range of cornerns, ore c is les then 0");
-		this.addEdge(from, to, c);
-	}
+	
 
 	/**
 	 * {@inheritDoc Graph}
 	 */
 	@Override
-	public void addBi(int v, int w) {
+	public void addBi(ImuteblePosition v, ImuteblePosition w) {
 		if(addInvariantchek(v,w))
-			throw new IllegalArgumentException("from or to is outside of the range of cornerns, ore c is les then 0");
-		this.addEdge(v, w, NO_COST);
-		this.addEdge(w,v, NO_COST);
+			throw new IllegalArgumentException("from or to is outside of the range of cornerns");
+		this.addEdge(v, w);
+		this.addEdge(w,v);
 	}
+
 
 	/**
 	 * {@inheritDoc Graph}
 	 */
 	@Override
-	public void addBi(int v, int w, int c) {
-		if(addInvariantchek(v,w, c))
-			throw new IllegalArgumentException("from or to is outside of the range of cornerns, ore c is les then 0");
-		this.addEdge(v, w, c);
-		this.addEdge(w,v, c);
-	}
-
-	/**
-	 * {@inheritDoc Graph}
-	 */
-	@Override
-	public void remove(int from, int to) {
+	public void remove(ImuteblePosition from, ImuteblePosition to) {
 		if(addInvariantchek(from, to))
 			throw new IllegalArgumentException("from or to is outside of the range " +
 					"of cornerns");
@@ -239,7 +202,7 @@ public class PositionGraph implements Graph {
 	 * {@inheritDoc Graph}
 	 */
 	@Override
-	public void removeBi(int v, int w) {
+	public void removeBi(ImuteblePosition v, ImuteblePosition w) {
 		if(addInvariantchek(v, w))
 			throw new IllegalArgumentException("from or to is outside of the range" +
 					" of cornerns");
@@ -247,29 +210,21 @@ public class PositionGraph implements Graph {
 		rmEdge(w,v);
 		
 	}
-	private void rmEdge(int v, int w){
+	private void rmEdge(ImuteblePosition v, ImuteblePosition w){
 		if(edges.get(v)==null)
 			return;
-		boolean reasignBacklink=false;
-		Integer[] toremove=null;
+		ImuteblePosition toremove=null;
 		if(edges.get(v)!=null)
-			for(Integer[] i: edges.get(v)){
-				if(i[0].equals(w)){
+			for(ImuteblePosition i: edges.get(v.hashCode())){
+				if(i.equals(w)){
 					toremove=i;
 					numEdges--;
-					if(!i[2].equals(1))
-						reasignBacklink=true;
 				}
 			}
-		edges.get(v).remove(toremove);
-		if(reasignBacklink){
-			if(edges.get(w)!=null)
-				for(Integer[] i: edges.get(w)){
-					if(i[0].equals(v)){
-						i[2]=0;
-					}
-				}
-		}
+		if(toremove==null)
+			return;
+		edges.get(v.hashCode()).remove(toremove);
+		
 	}
 	
 
@@ -280,7 +235,7 @@ public class PositionGraph implements Graph {
 	 */
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder("{");
+		/*StringBuilder sb = new StringBuilder("{");
 		boolean first =true;
 		for(int i = 0; i<vertices;i++){
 			if(edges.get(i)==null)
@@ -302,6 +257,7 @@ public class PositionGraph implements Graph {
 			 
 		}
 		sb.append("}");
-		return sb.toString();
+		return sb.toString();*/
+		return super.toString();
 	}
 }

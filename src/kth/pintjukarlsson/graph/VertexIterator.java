@@ -24,5 +24,5 @@ public interface VertexIterator {
 	 * @throws NoSuchElementException
 	 *             if the iteration has no more elements
 	 */
-	int next() throws NoSuchElementException;
+	ImuteblePosition next() throws NoSuchElementException;
 }
