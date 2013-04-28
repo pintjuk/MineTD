@@ -53,7 +53,7 @@ public class Game extends com.badlogic.gdx.Game {
 	}
 	
 	/**
-	 * is it not obvieus
+	 * yes it is obvious
 	 */
 	@Override
 	public void render() {	
@@ -63,6 +63,7 @@ public class Game extends com.badlogic.gdx.Game {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		level.Draw(camera);
+		level.DrawPathGraph();
 		batch.setProjectionMatrix(camera.combined);
 		
 	}

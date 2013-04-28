@@ -1,5 +1,7 @@
 package kth.pintjukarlsson.graph;
 
+import com.sun.jndi.url.iiopname.iiopnameURLContextFactory;
+
 public class ImuteblePosition {
 	private int x;
 	private int y;
@@ -35,6 +37,24 @@ public class ImuteblePosition {
 		if(y!=i.y)
 			return false;
 		return true;
+	}
+	
+	public float distance(ImuteblePosition i){
+		float dx = this.getX()-i.getX();
+		float dy = this.getY()-i.getY();
+		return (float)Math.sqrt( (double)dx*dx+dy*dy);
+	}
+	
+	public float distanceSq(ImuteblePosition i){
+		float dx = this.getX()-i.getX();
+		float dy = this.getY()-i.getY();
+		return dx*dx+dy*dy;
+	}
+	
+	public float manhatanDistance(ImuteblePosition i){
+		float dx = this.getX()>i.getX()?this.getX()-i.getX():i.getX()-this.getX();
+		float dy = this.getY()>i.getY()?this.getY()-i.getY():i.getY()-this.getY();
+		return dx+dy;
 	}
 
 	

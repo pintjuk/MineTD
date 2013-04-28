@@ -16,52 +16,57 @@ public class Dijkstra {
 	 * @param to
 	 * @return
 	 */
-	public static int[] findPath(Graph graph, int from, int to){
-		boolean[] visited = new boolean[graph.numVertices()];
+	public static ImuteblePosition[] findPath(PositionGraph graph, ImuteblePosition from, ImuteblePosition to){
+		boolean[][] visited = new boolean[graph.getHight()][graph.getWidth()];
 		PriorityQueue<Path> alternetPaths = new PriorityQueue<>();
 		
-		Path first = Path.make();
-		first.add(from, 0);
+		Path first = Path.make(to);
+		first.add(from);
 		alternetPaths.add(first);
 		
 		
 		while (!alternetPaths.isEmpty()){
 			Path bestPath = alternetPaths.poll();
-			visited[bestPath.path.peek()]=true;
+			visited[bestPath.path.peek().getY()][bestPath.path.peek().getX()]=true;
 			if(bestPath.path.peek()==to)
 					return bestPath.toArray();
 			for(VertexIterator iter = graph.neighbors(bestPath.path.peek());
 					iter.hasNext();){
-				int next = iter.next();
-				if(!visited[next]){
-					int tonextcost = graph.cost(bestPath.path.peek(), next);
-					if(tonextcost>=0)
-						alternetPaths.add(bestPath.clone().add(next, tonextcost));
+				ImuteblePosition next = iter.next();
+				
+				if(!visited[next.getY()][next.getX()]){
+					float tonextcost = calcCost(bestPath.path.peek(), next);
+					alternetPaths.add(bestPath.clone().add(next));
 				}
 			}
 			
 		}
-		return new int[]{};
+		return new ImuteblePosition[]{};
 	}
 	
 	
 	private static class Path implements Comparable<Path>{
-		private int cost=0;
-		private Stack<Integer> path;
+		private float cost=0;
+		private float toGoal=0;
+		private Stack<ImuteblePosition> path;
+		private ImuteblePosition goal;
 		@Override
 		public int compareTo(Path o) {
-			return cost-o.cost;
+			if(true)
+				return (int)(cost-o.cost);
+			return (int)((cost+toGoal)-(o.cost+o.toGoal));
 		}
-		public static Path make(){
+		public static Path make(ImuteblePosition g){
 			Path result = new Path();
 			result.path = new Stack<>();
+			result.goal = g;
 			return result;
 		}
 		
 		public Path clone() {
 			Path clone = new Path();
 			try{
-				clone.path=(Stack<Integer>) path.clone();
+				clone.path=(Stack<ImuteblePosition>) path.clone();
 			}catch (Exception e) {
 					try {
 						throw new Exception("WTF, this is IMPOSSIBRUE");
@@ -73,19 +78,26 @@ public class Dijkstra {
 			clone.cost = cost;
 			return clone;
 		}
-		public Path add(int node, int c){
+		public Path add(ImuteblePosition node){
+			if(path.isEmpty()){
+				this.cost=0;
+				path.push(node);
+				return this;
+			}
+			this.cost+= Dijkstra.calcCost(node, path.peek());
 			path.push(node);
-			this.cost+=c;
 			return this;
 		}
-		public int[] toArray(){
-			int[] result = new int[path.size()];
+		public ImuteblePosition[] toArray(){
+			ImuteblePosition[] result = new ImuteblePosition[path.size()];
 			Object[] array = path.toArray(); 
 			for(int i=0;i<array.length; i++)
-				result[i]=(Integer)array[i];
+				result[i]=(ImuteblePosition)array[i];
 			return result;
 		}
 	}
 	
-	
+	public static float calcCost(ImuteblePosition a, ImuteblePosition b){
+		return a.distance(b);
+	}
 }

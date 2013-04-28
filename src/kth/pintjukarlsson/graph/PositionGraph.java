@@ -8,19 +8,30 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import kth.pintjukarlsson.debugdraw.LinkDebug;
+
 /**
  * A graph with a fixed number of 2d vertices implemented using adjacency table.
  * 
  * @author pintjuk
  * @version 0.1
  */
-public class PositionGraph implements Graph {
+public class PositionGraph {
 	/**
 	 * The map edges[v] contains the key-value pair (w, c) if there is an edge
 	 * from v to w; c is the cost assigned to this edge. The maps may be null
 	 * and are allocated only when needed.
 	 */
 	private final Hashtable<Integer, ArrayList<ImuteblePosition>> edges;
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public void setHight(int hight) {
+		this.hight = hight;
+	}
+
+
 	private int width;
 	private int hight;
 	private int numEdges=0;
@@ -42,26 +53,37 @@ public class PositionGraph implements Graph {
 		
 	}
 
+	public int getWidth() {
+		return width;
+	}
+
+	
+	public int getHight() {
+		return hight;
+	}
+
+	
+
 	/**
 	 * Add an edge without checking parameters.
 	 */
 	private void addEdge(ImuteblePosition from, ImuteblePosition to) {
-		if(edges.get(from.hashCode())==null){
-			edges.put(from.hashCode(), new ArrayList<ImuteblePosition>());
+		if(edges.get(toKey(from))==null){
+			edges.put(toKey(from), new ArrayList<ImuteblePosition>());
 		}
-		for(int i = 0; i<edges.get(from).size();i++){
-			if(edges.get(from.hashCode()).get(i).equals(to))
+		for(int i = 0; i<edges.get(toKey(from)).size();i++){
+			if(edges.get(toKey(from)).get(i).equals(to))
 				return;
 		}
 		numEdges++;
-		edges.get(from.hashCode()).add(to);
+		edges.get(toKey(from)).add(to);
 		
 	}
 
 	/**
 	 * {@inheritDoc Graph} Time complexity: O(1).
 	 */
-	@Override
+	
 	public int numVertices() {
 		return width*hight;
 	}
@@ -69,46 +91,19 @@ public class PositionGraph implements Graph {
 	/**
 	 * {@inheritDoc Graph} Time complexity: O(1).
 	 */
-	@Override
+	
 	public int numEdges() {
 		return numEdges;
 	}
 
-	/**
-	 * {@inheritDoc Graph}
-	 */
-	@Override
-	public int degree(ImuteblePosition v) throws IllegalArgumentException {
-	 /*   boolean[] links = new boolean[numVertices()];
-		for(int i = 0; i<=vertices;i++){
-			if(edges.get(i)!=null)
-				if(edges.get(i)!=null)
-					 for(Integer[] edg: edges.get(i)){
-						 if(i==v&&!edg[2].equals(1)){
-							 links[edg[0]]=true;
-						 }
-						 else
-						 if(edg[0].equals(v)){
-							 links[i]=true;
-						 }
-						 
-					 }
-		}
-		int counts=0;
-		for(boolean b: links){
-			if(b)
-				counts++;
-		}
-		return counts;*/
-		return 0;
-	}
+	
 	
 	static class VertecisIt implements VertexIterator{
 		int counter=0;
 		ArrayList<ImuteblePosition> v;
 		public VertecisIt(ArrayList<ImuteblePosition> vertecis){v=vertecis;}
 		
-		@Override
+		 
 		public boolean hasNext() {
 			if (v==null)
 				return false;
@@ -129,19 +124,19 @@ public class PositionGraph implements Graph {
 	/**
 	 * {@inheritDoc Graph}
 	 */
-	@Override
+	 
 	public VertexIterator neighbors(ImuteblePosition v) {
-		return new VertecisIt( edges.get(v.hashCode()));
+		return new VertecisIt( edges.get(toKey(v)));
 	}
 
 	/**
 	 * {@inheritDoc Graph}
 	 */
-	@Override
+	 
 	public boolean hasEdge(ImuteblePosition v, ImuteblePosition w) {
-		if(edges.get(v.hashCode())==null)
+		if(edges.get(toKey(v))==null)
 			return false;
-		for(ImuteblePosition edg: edges.get(v.hashCode())){
+		for(ImuteblePosition edg: edges.get(toKey(v))){
 			 if(edg.equals(w))
 				 return true;
 		}
@@ -164,7 +159,7 @@ public class PositionGraph implements Graph {
 	/**
 	 * {@inheritDoc Graph}
 	 */
-	@Override
+	 
 	public void add(ImuteblePosition from, ImuteblePosition to) {
 		if(addInvariantchek(from, to))
 			throw new IllegalArgumentException("from or to is outside of the range of cornerns");
@@ -177,7 +172,6 @@ public class PositionGraph implements Graph {
 	/**
 	 * {@inheritDoc Graph}
 	 */
-	@Override
 	public void addBi(ImuteblePosition v, ImuteblePosition w) {
 		if(addInvariantchek(v,w))
 			throw new IllegalArgumentException("from or to is outside of the range of cornerns");
@@ -189,7 +183,6 @@ public class PositionGraph implements Graph {
 	/**
 	 * {@inheritDoc Graph}
 	 */
-	@Override
 	public void remove(ImuteblePosition from, ImuteblePosition to) {
 		if(addInvariantchek(from, to))
 			throw new IllegalArgumentException("from or to is outside of the range " +
@@ -201,7 +194,6 @@ public class PositionGraph implements Graph {
 	/**
 	 * {@inheritDoc Graph}
 	 */
-	@Override
 	public void removeBi(ImuteblePosition v, ImuteblePosition w) {
 		if(addInvariantchek(v, w))
 			throw new IllegalArgumentException("from or to is outside of the range" +
@@ -211,19 +203,18 @@ public class PositionGraph implements Graph {
 		
 	}
 	private void rmEdge(ImuteblePosition v, ImuteblePosition w){
-		if(edges.get(v)==null)
+		if(edges.get(toKey(v))==null)
 			return;
 		ImuteblePosition toremove=null;
-		if(edges.get(v)!=null)
-			for(ImuteblePosition i: edges.get(v.hashCode())){
-				if(i.equals(w)){
-					toremove=i;
-					numEdges--;
-				}
+		for(ImuteblePosition i: edges.get(toKey(v))){
+			if(i.equals(w)){
+				toremove=i;
+				numEdges--;
 			}
+		}
 		if(toremove==null)
 			return;
-		edges.get(v.hashCode()).remove(toremove);
+		edges.get(toKey(v)).remove(toremove);
 		
 	}
 	
@@ -233,7 +224,6 @@ public class PositionGraph implements Graph {
 	 * 
 	 * @return a String representation of this graph
 	 */
-	@Override
 	public String toString() {
 		/*StringBuilder sb = new StringBuilder("{");
 		boolean first =true;
@@ -259,5 +249,44 @@ public class PositionGraph implements Graph {
 		sb.append("}");
 		return sb.toString();*/
 		return super.toString();
+	}
+	int toKey(int x, int y){
+		return x+(y*(width+1));
+	}
+	int toKey(ImuteblePosition x){
+		return toKey(x.getX(), x.getY());
+	}
+	ImuteblePosition keyToPos(int key){
+		int x = key%width;
+		int y = (key-x)/width;
+		return new ImuteblePosition(x,y);
+	}
+	
+
+	private ArrayList<LinkDebug> links = new ArrayList<LinkDebug>();
+	public void reBuildDibugImg(){
+		links.clear();
+		for(int y= 0;y<getHight();y++){
+			for(int x= 0;x<getWidth();x++){
+				ArrayList<ImuteblePosition> nexts = edges.get(toKey(new ImuteblePosition(x, y)));
+				if(nexts==null)
+					continue;
+				for(ImuteblePosition b: nexts)
+					this.links.add(new LinkDebug (x+0.5f, y+0.5f, b.getX()+0.5f, b.getY()+0.5f, 0));
+			}
+		}
+		/*for(Integer key: edges.keySet()){
+			ArrayList<ImuteblePosition> vetecis = edges.get(key.intValue());
+			ImuteblePosition vertex1 = keyToPos(key.intValue());
+			for(ImuteblePosition vertex2: vetecis){
+				links.add(new LinkDebug (vertex1.getX(), vertex1.getY(), vertex2.getX(), vertex2.getY(), 150));
+			}
+		}*/
+	}
+	public void DibugDraw(){
+		
+		for(LinkDebug d: links){
+			d.Draw();
+		}
 	}
 }
