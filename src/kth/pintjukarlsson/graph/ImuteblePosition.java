@@ -57,6 +57,11 @@ public class ImuteblePosition {
 		return dx+dy;
 	}
 
+	@Override
+	public String toString() {
+		return "("+x+", "+y+")";
+	}
+
 	
 
 

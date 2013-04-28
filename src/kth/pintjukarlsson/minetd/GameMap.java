@@ -61,6 +61,7 @@ public class GameMap {
 							graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x, y+1));
 						if(layer.getCell(x, y-1)==null&&y>0)
 							graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x, y-1));
+						
 						if(layer.getCell(x+1, y+1)==null&&y<h&&x<w)
 							graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x+1, y+1));
 						if(layer.getCell(x-1, y-1)==null&&y>0&&x>0)
@@ -69,31 +70,15 @@ public class GameMap {
 							graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x-1, y+1));
 						if(layer.getCell(x+1, y-1)==null&&x<w&&y>0)
 							graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x+1, y-1));
-						
-						/*if(layer.getCell(x+1, y)==null)
-							links.add(new LinkDebug(x+0.5f, y+0.5f, x+1.5f, y+0.5f, 200));
-						if(layer.getCell(x-1, y)==null)
-							links.add(new LinkDebug(x+0.5f, y+0.5f, x-0.5f, y+0.5f, 200));
-						if(layer.getCell(x, y+1)==null)
-							links.add(new LinkDebug(x+0.5f, y+0.5f, x+0.5f, y+1.5f, 200));
-						if(layer.getCell(x, y-1)==null)
-							links.add(new LinkDebug(x+0.5f, y+0.5f, x+0.5f, y-0.5f, 200));
-						if(layer.getCell(x+1, y+1)==null)
-							links.add(new LinkDebug(x+0.5f, y+0.5f, x+1.5f, y+1.5f, 200));
-						if(layer.getCell(x-1, y-1)==null)
-							links.add(new LinkDebug(x+0.5f, y+0.5f, x-0.5f, y-0.5f, 200));
-						if(layer.getCell(x-1, y+1)==null)
-							links.add(new LinkDebug(x+0.5f, y+0.5f, x-0.5f, y+1.5f, 200));
-						if(layer.getCell(x+1, y-1)==null)
-							links.add(new LinkDebug(x+0.5f, y+0.5f, x+1.5f, y-0.5f, 200));*/
 					}
 				}
 			}
-			ImuteblePosition[] i = getPath(new ImuteblePosition(1, 5), new ImuteblePosition(3, 6));
-			//ImuteblePosition old = i[0];
-			//for(ImuteblePosition z: i){
-			//	links.add(new LinkDebug(old.getX()+0.25f,old.getY()+0.25f, z.getX()+0.25f, z.getY()+0.25f, 200));
-			//}
+			ImuteblePosition[] i = getPath(new ImuteblePosition(0, 7), new ImuteblePosition(17+13, 2));
+			ImuteblePosition old = i[0];
+			for(ImuteblePosition z: i){
+				links.add(new LinkDebug(old.getX()+0.5f,old.getY()+0.5f, z.getX()+0.5f, z.getY()+0.5f, 0));
+				old = z;
+			}
 			
 			graph.reBuildDibugImg();
 	}

@@ -17,6 +17,8 @@ public class Dijkstra {
 	 * @return
 	 */
 	public static ImuteblePosition[] findPath(PositionGraph graph, ImuteblePosition from, ImuteblePosition to){
+		if(from.equals(to))
+			return new ImuteblePosition[]{};
 		boolean[][] visited = new boolean[graph.getHight()][graph.getWidth()];
 		PriorityQueue<Path> alternetPaths = new PriorityQueue<>();
 		
@@ -28,7 +30,7 @@ public class Dijkstra {
 		while (!alternetPaths.isEmpty()){
 			Path bestPath = alternetPaths.poll();
 			visited[bestPath.path.peek().getY()][bestPath.path.peek().getX()]=true;
-			if(bestPath.path.peek()==to)
+			if(bestPath.path.peek().equals(to))
 					return bestPath.toArray();
 			for(VertexIterator iter = graph.neighbors(bestPath.path.peek());
 					iter.hasNext();){
@@ -52,8 +54,8 @@ public class Dijkstra {
 		private ImuteblePosition goal;
 		@Override
 		public int compareTo(Path o) {
-			if(true)
-				return (int)(cost-o.cost);
+			
+				//return (int)(cost-o.cost);
 			return (int)((cost+toGoal)-(o.cost+o.toGoal));
 		}
 		public static Path make(ImuteblePosition g){
@@ -76,15 +78,18 @@ public class Dijkstra {
 				
 			}
 			clone.cost = cost;
+			clone.goal = goal;
 			return clone;
 		}
 		public Path add(ImuteblePosition node){
 			if(path.isEmpty()){
 				this.cost=0;
 				path.push(node);
+				toGoal = goal.manhatanDistance(node);
 				return this;
 			}
 			this.cost+= Dijkstra.calcCost(node, path.peek());
+			toGoal = goal.manhatanDistance(node);
 			path.push(node);
 			return this;
 		}
@@ -95,9 +100,21 @@ public class Dijkstra {
 				result[i]=(ImuteblePosition)array[i];
 			return result;
 		}
+		@Override
+		public String toString() {
+			StringBuilder s = new StringBuilder("[");
+			for(ImuteblePosition i: this.path)
+				s.append(i+", ");
+			s.append("]");
+			return s.toString();
+		}
 	}
 	
 	public static float calcCost(ImuteblePosition a, ImuteblePosition b){
-		return a.distance(b);
+		return a.distanceSq(b);
 	}
+
+	
+	
+	
 }
