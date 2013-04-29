@@ -36,7 +36,12 @@ public class Game extends com.badlogic.gdx.Game {
 		level.setTile(1, 2, 7);
 		level.setTile(1, 3, 7);
 		level.setTile(1, 2, 6);
+		level.removeTile(0, 2, 7);
+		level.removeTile(0, 0, 0);
+		level.removeTile(0, 0, 2);
+		level.removeTile(0, 0, 1);
 		level.repathtest();
+		level.resetDebugDraw();
 	}
 
 	private void setupCam() {

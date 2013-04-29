@@ -22,6 +22,7 @@ public class GameMap {
 	private TiledMapRenderer renderer;
 	private PositionGraph graph;
 	private ArrayList<LinkDebug> links = new ArrayList<LinkDebug>();
+	private TiledMapTileLayer pathingLayer;
 	
 	void init(){
 		renderer = new OrthogonalTiledMapRenderer(map, 1f / 32f);
@@ -43,40 +44,20 @@ public class GameMap {
 			d.Draw();
 		}
 	}
-	
-	public void buildDebugGraph(){
+
+	private void buildGraph(){
 			
-			TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(1);
+			TiledMapTileLayer layer = pathingLayer;
 			int h=layer.getHeight();
 			int w= layer.getWidth();
 			for (int y = 0; y <= h; y++){
 				for (int x = 0; x <= w; x++){
 					Cell cell = layer.getCell(x, y);
 					if (cell == null) {
-						if(layer.getCell(x+1, y)==null &&x<w)
-							graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x+1, y));
-						if(layer.getCell(x-1, y)==null&&x>0)
-							graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x-1, y));
-						if(layer.getCell(x, y+1)==null&&y<h)
-							graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x, y+1));
-						if(layer.getCell(x, y-1)==null&&y>0)
-							graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x, y-1));
-						
-						if(layer.getCell(x+1, y+1)==null&&y<h&&x<w)
-							graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x+1, y+1));
-						if(layer.getCell(x-1, y-1)==null&&y>0&&x>0)
-							graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x-1, y-1));
-						if(layer.getCell(x-1, y+1)==null&&y<h&&x>0)
-							graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x-1, y+1));
-						if(layer.getCell(x+1, y-1)==null&&x<w&&y>0)
-							graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x+1, y-1));
+						setGraphTile(x, y, layer);
 					}
 				}
 			}
-			
-			
-			
-			graph.reBuildDibugImg();
 	}
 	
 	public void repathtest(){
@@ -101,13 +82,40 @@ public class GameMap {
 	 * returns true if the tile was set sucsesfuly 
 	 */
 	public boolean setTile(int tile, int x, int y){
+		Cell cell = new Cell();
+		pathingLayer.setCell(x, y, cell);
 		graph.removeAllLinksTo(new ImuteblePosition(x, y));
-		graph.reBuildDibugImg();
 		return true;
 	}
 	
 	public boolean  removeTile(int tile, int x, int y){
+		pathingLayer.setCell(x, y, null);
+		setGraphTile(x, y, pathingLayer);
 		return false;
+	}
+	
+	private void setGraphTile(int x , int y, TiledMapTileLayer layer){
+		int h=layer.getHeight();
+		int w= layer.getWidth();
+		if(layer.getCell(x+1, y)==null &&x<w)
+			graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x+1, y));
+		if(layer.getCell(x-1, y)==null&&x>0)
+			graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x-1, y));
+		if(layer.getCell(x, y+1)==null&&y<h)
+			graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x, y+1));
+		if(layer.getCell(x, y-1)==null&&y>0)
+			graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x, y-1));
+		
+	/*	if(layer.getCell(x+1, y+1)==null&&y<h&&x<w)
+			graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x+1, y+1));
+		if(layer.getCell(x-1, y-1)==null&&y>0&&x>0)
+			graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x-1, y-1));
+		if(layer.getCell(x-1, y+1)==null&&y<h&&x>0)
+			graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x-1, y+1));
+		if(layer.getCell(x+1, y-1)==null&&x<w&&y>0)
+			graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x+1, y-1));
+	
+		*/
 	}
 	public ImuteblePosition[] getPath(ImuteblePosition a, ImuteblePosition b){
 		return Dijkstra.findPath(graph, a, b);
@@ -118,8 +126,13 @@ public class GameMap {
 		assetManager.load("data/level1.tmx", TiledMap.class);
 		assetManager.finishLoading();
 		map = assetManager.get("data/level1.tmx");
+		pathingLayer = (TiledMapTileLayer) map.getLayers().get(1);
 		//map.getLayers().get(0).setVisible(false);
 		init();
-		buildDebugGraph();
+		buildGraph();
+	}
+	
+	public void resetDebugDraw(){
+		graph.reBuildDibugImg();
 	}
 }
