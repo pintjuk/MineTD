@@ -45,7 +45,7 @@ public class GameMap {
 	}
 	
 	public void buildDebugGraph(){
-		
+			
 			TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(1);
 			int h=layer.getHeight();
 			int w= layer.getWidth();
@@ -73,16 +73,42 @@ public class GameMap {
 					}
 				}
 			}
-			ImuteblePosition[] i = getPath(new ImuteblePosition(0, 7), new ImuteblePosition(17+13, 2));
-			ImuteblePosition old = i[0];
-			for(ImuteblePosition z: i){
-				links.add(new LinkDebug(old.getX()+0.5f,old.getY()+0.5f, z.getX()+0.5f, z.getY()+0.5f, 0));
-				old = z;
-			}
+			
+			
 			
 			graph.reBuildDibugImg();
 	}
 	
+	public void repathtest(){
+		links.clear();
+		ImuteblePosition[] i = getPath(new ImuteblePosition(0, 7), new ImuteblePosition(17+13, 2));
+		ImuteblePosition old = i[0];
+		for(ImuteblePosition z: i){
+			links.add(new LinkDebug(old.getX()+0.5f,old.getY()+0.5f, z.getX()+0.5f, z.getY()+0.5f, 0));
+			old = z;
+		}
+	}
+	/**
+	 * Sets a tile on the mop
+	 * 
+	 * @param tile
+	 * index of the type of tile
+	 * @param x
+	 * position along the x axes 
+	 * @param y
+	 * position along the y axes
+	 * @return
+	 * returns true if the tile was set sucsesfuly 
+	 */
+	public boolean setTile(int tile, int x, int y){
+		graph.removeAllLinksTo(new ImuteblePosition(x, y));
+		graph.reBuildDibugImg();
+		return true;
+	}
+	
+	public boolean  removeTile(int tile, int x, int y){
+		return false;
+	}
 	public ImuteblePosition[] getPath(ImuteblePosition a, ImuteblePosition b){
 		return Dijkstra.findPath(graph, a, b);
 	}
@@ -92,7 +118,7 @@ public class GameMap {
 		assetManager.load("data/level1.tmx", TiledMap.class);
 		assetManager.finishLoading();
 		map = assetManager.get("data/level1.tmx");
-		map.getLayers().get(0).setVisible(false);
+		//map.getLayers().get(0).setVisible(false);
 		init();
 		buildDebugGraph();
 	}

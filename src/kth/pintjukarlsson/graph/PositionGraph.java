@@ -283,6 +283,27 @@ public class PositionGraph {
 			}
 		}*/
 	}
+	public void removeAllLinksTo(ImuteblePosition to){
+		 if(edges.get(toKey(to))!=null){
+			 numEdges-=edges.get(toKey(to)).size();
+			 edges.remove(toKey(to));
+		 }
+		 for(int y= 0;y<getHight();y++){
+			for(int x= 0;x<getWidth();x++){
+				ArrayList<ImuteblePosition> nexts = edges.get(toKey(new ImuteblePosition(x, y)));
+				ArrayList<ImuteblePosition> toremove= new ArrayList<>();
+				if(nexts==null)
+					continue;
+				for(ImuteblePosition b: nexts){
+					if(b.equals(to))
+						toremove.add(b);
+				}
+				for(ImuteblePosition b: toremove){
+					nexts.remove(b);
+				}
+			}
+		}
+	}
 	public void DibugDraw(){
 		
 		for(LinkDebug d: links){
