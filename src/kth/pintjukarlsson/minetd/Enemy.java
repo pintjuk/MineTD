@@ -10,9 +10,16 @@ public class Enemy extends Entity {
 	
 	private int speed;
 	
-	public Enemy(int x, int y) {
+	/**
+	 * Creates a new enemy with full hitpoints at position x, y.
+	 * The enemy moves at (speed) (units) per second.
+	 * 
+	 */
+	public Enemy(int x, int y, int maxhp, int speed) {
 		super(x, y);
-		// TODO Auto-generated constructor stub
+		this.maxhp = maxhp;
+		hp = maxhp;
+		this.speed = speed;
 	}
 	// Health setters/getters and alive check
 	/**

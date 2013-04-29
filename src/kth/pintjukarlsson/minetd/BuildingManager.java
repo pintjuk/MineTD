@@ -9,4 +9,16 @@ public class BuildingManager {
 		buildings = new Building[2];
 	}
 
+	// Runs the Update method for each existing Building
+	public void Update() {
+		for (Building b : buildings) {
+			b.Update();
+		}
+	}
+	// Runs the Draw method for each existing Building
+	public void Draw() {
+		for (Building b : buildings) {
+			b.Draw();
+		}
+	}
 }
