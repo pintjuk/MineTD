@@ -20,7 +20,7 @@ public class Dijkstra {
 		if(from.equals(to))
 			return new ImuteblePosition[]{};
 		boolean[][] visited = new boolean[graph.getHight()][graph.getWidth()];
-		PriorityQueue<Path> alternetPaths = new PriorityQueue<>();
+		PriorityQueue<Path> alternetPaths = new PriorityQueue<Path>();
 		
 		Path first = Path.make(to);
 		first.add(from);
@@ -60,7 +60,7 @@ public class Dijkstra {
 		}
 		public static Path make(ImuteblePosition g){
 			Path result = new Path();
-			result.path = new Stack<>();
+			result.path = new Stack<ImuteblePosition>();
 			result.goal = g;
 			return result;
 		}
@@ -71,7 +71,7 @@ public class Dijkstra {
 				clone.path=(Stack<ImuteblePosition>) path.clone();
 			}catch (Exception e) {
 					try {
-						throw new Exception("WTF, this is IMPOSSIBRUE");
+						throw new Exception("WTF, this is IMPOSSIBRUE"); // this is not helpful :3
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
