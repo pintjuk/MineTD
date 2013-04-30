@@ -3,6 +3,7 @@ package kth.pintjukarlsson.minetd;
 import java.util.logging.Level;
 
 import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.assets.AssetManager;
@@ -13,13 +14,44 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Matrix4;
 
-public class Game extends com.badlogic.gdx.Game {
+public class MineTD 
+	extends Game
+{
+	public OrthographicCamera getCamera() {
+		return camera;
+	}
+
+	public SpriteBatch getBatch() {
+		return batch;
+	}
+
+	public InputMultiplexer getInMultiplexer() {
+		return InMultiplexer;
+	}
+
+	public AssetManager getAssetManager() {
+		return assetManager;
+	}
+
+	public MouseInputAdapter getInput() {
+		return input;
+	}
+
+	public GameMap getLevel() {
+		return level;
+	}
+
+	
+
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
 	private InputMultiplexer InMultiplexer;
 	private AssetManager assetManager;
+	private MouseInputAdapter input;
 	private GameMap level;
+	private int w, h;
 	@Override
 	public void create() {		
 		InMultiplexer = new InputMultiplexer();
@@ -27,6 +59,9 @@ public class Game extends com.badlogic.gdx.Game {
 		assetManager = new AssetManager();
 		
 		setupCam();
+		
+		this.input = new MouseInputAdapter(this);
+		
 		
 		batch = new SpriteBatch();
 		
@@ -42,6 +77,9 @@ public class Game extends com.badlogic.gdx.Game {
 		level.removeTile(0, 0, 1);
 		level.repathtest();
 		level.resetDebugDraw();
+		
+		input.init();
+		InMultiplexer.addProcessor(this.input);
 	}
 
 	private void setupCam() {
@@ -50,9 +88,8 @@ public class Game extends com.badlogic.gdx.Game {
 
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, (w / h) * 10, 10);
-		camera.zoom = 1f;
+		camera.zoom = 2f;
 		camera.update();
-		InMultiplexer.addProcessor(new OrthoCamController(camera));
 	}
 
 	@Override
@@ -69,12 +106,19 @@ public class Game extends com.badlogic.gdx.Game {
 	public void render() {	
 		//update game
 		updateGame();
+		
 		//rander 
+		System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		level.Draw(camera);
+		//level.Draw(camera);
+		System.out.println(camera.view);
+		System.out.println(camera.projection);
+		camera.apply(Gdx.gl10);
+		
 		level.DrawPathGraph();
-		batch.setProjectionMatrix(camera.combined);
+		//batch.setProjectionMatrix(camera.combined);
+		input.testDraw(w, h);
 		
 	}
 
@@ -85,6 +129,7 @@ public class Game extends com.badlogic.gdx.Game {
 
 	@Override
 	public void resize(int width, int height) {
+		w=width;h=height;
 	}
 
 	@Override
@@ -94,4 +139,6 @@ public class Game extends com.badlogic.gdx.Game {
 	@Override
 	public void resume() {
 	}
+
+	
 }

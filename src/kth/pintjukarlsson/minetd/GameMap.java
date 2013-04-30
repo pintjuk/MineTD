@@ -16,6 +16,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
 
 public class GameMap {
 	private TiledMap map;
@@ -23,9 +24,11 @@ public class GameMap {
 	private PositionGraph graph;
 	private ArrayList<LinkDebug> links = new ArrayList<LinkDebug>();
 	private TiledMapTileLayer pathingLayer;
+	Vector2 testPosition= new Vector2();
+	LinkDebug lol = new LinkDebug(0, 0, 0, 0, 0);
 	
 	void init(){
-		renderer = new OrthogonalTiledMapRenderer(map, 1f / 32f);
+		renderer = new OrthogonalTiledMapRenderer(map, 1f /32f);
 		graph = new PositionGraph(((TiledMapTileLayer)map.getLayers().get(1)).getWidth(), 
 								  ((TiledMapTileLayer)map.getLayers().get(1)).getWidth());
 	}
