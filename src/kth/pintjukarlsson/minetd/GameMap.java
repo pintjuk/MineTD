@@ -20,6 +20,13 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 public class GameMap {
+	public ImuteblePosition getSpan() {
+		return span;
+	}
+	public ImuteblePosition getFinish() {
+		return finish;
+	}
+
 	private TiledMap map;
 	private OrthogonalTiledMapRenderer renderer;
 	private PositionGraph graph;
@@ -27,6 +34,7 @@ public class GameMap {
 	private TiledMapTileLayer pathingLayer;
 	Vector2 testPosition= new Vector2();
 	LinkDebug lol = new LinkDebug(0, 0, 0, 0, 0);
+	private ImuteblePosition span, finish;
 	
 	public OrthogonalTiledMapRenderer getRenderer(){
 		return  renderer;
@@ -58,15 +66,35 @@ public class GameMap {
 			TiledMapTileLayer layer = pathingLayer;
 			int h=layer.getHeight();
 			int w= layer.getWidth();
+			ArrayList<ImuteblePosition> torm = new ArrayList<ImuteblePosition>();
 			for (int y = 0; y <= h; y++){
 				for (int x = 0; x <= w; x++){
+					
 					Cell cell = layer.getCell(x, y);
 					if (cell == null) {
 						setGraphTile(x, y, layer);
 					}else{
-						System.out.print(cell.getTile().getId());
+						if(cell.getTile().getId()==269){
+							finish = new ImuteblePosition(x, y);
+							((TiledMapTileLayer)map.getLayers().get(1)).setCell(x, y, cell);
+							removeTile(0, x, y);
+						}else 
+						if(cell.getTile().getId()==196){
+							span = new ImuteblePosition(x, y);
+							((TiledMapTileLayer)map.getLayers().get(1)).setCell(x, y, cell);
+							removeTile(0, x, y);
+						}
+						/*if(cell.getTile().getId()==226||cell.getTile().getId()==3){
+							torm.add(new ImuteblePosition(x, y));
+						}else{
+							System.out.println(cell.getTile().getId());
+						}*/
 					}
 				}
+			}
+			
+			for(ImuteblePosition p: torm){
+				removeTile(0, p.getX(), p.getY());
 			}
 	}
 	
@@ -92,10 +120,17 @@ public class GameMap {
 	 * returns true if the tile was set sucsesfuly 
 	 */
 	public boolean setTile(int tile, int x, int y){
+		graph.removeAllLinksTo(new ImuteblePosition(x, y));
+		int length = getPathStartToFinish().length;
+		if(length==0){
+			
+			setGraphTile(x, y, pathingLayer);
+			return false;
+		}
+			
 		Cell cell = new Cell();
 		cell.setTile(pathingLayer.getCell(1, 1).getTile());
 		pathingLayer.setCell(x, y, cell);
-		graph.removeAllLinksTo(new ImuteblePosition(x, y));
 		return true;
 	}
 	
@@ -115,32 +150,36 @@ public class GameMap {
 		int w= layer.getWidth();
 		
 		if(layer.getCell(x+1, y)==null &&x<w)
-			graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x+1, y));
+			graph.addBi(new ImuteblePosition(x, y), new ImuteblePosition(x+1, y));
 		if(layer.getCell(x-1, y)==null&&x>0)
-			graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x-1, y));
+			graph.addBi(new ImuteblePosition(x, y), new ImuteblePosition(x-1, y));
 		if(layer.getCell(x, y+1)==null&&y<h)
-			graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x, y+1));
+			graph.addBi(new ImuteblePosition(x, y), new ImuteblePosition(x, y+1));
 		if(layer.getCell(x, y-1)==null&&y>0)
-			graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x, y-1));
+			graph.addBi(new ImuteblePosition(x, y), new ImuteblePosition(x, y-1));
 		
-	/*	if(layer.getCell(x+1, y+1)==null&&y<h&&x<w)
+		/*if(layer.getCell(x+1, y+1)==null&&y<h&&x<w)
 			graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x+1, y+1));
 		if(layer.getCell(x-1, y-1)==null&&y>0&&x>0)
 			graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x-1, y-1));
 		if(layer.getCell(x-1, y+1)==null&&y<h&&x>0)
 			graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x-1, y+1));
 		if(layer.getCell(x+1, y-1)==null&&x<w&&y>0)
-			graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x+1, y-1));
+			graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x+1, y-1));*/
 	
-		*/
+		
 	}
 	public ImuteblePosition[] getPath(ImuteblePosition a, ImuteblePosition b){
 		return Dijkstra.findPath(graph, a, b);
 	}
+	public ImuteblePosition[] getPathStartToFinish(){
+		//return getPath(new ImuteblePosition(finish.getX()+1,finish.getY()+1 ), new ImuteblePosition(finish.getX()+1,finish.getY()+2 ));
+		return getPath(this.finish, this.span);
+	}
 	
 	public void loadAssets(AssetManager assetManager){
 		map = assetManager.get("data/map.tmx");
-		pathingLayer = (TiledMapTileLayer) map.getLayers().get(1);
+		pathingLayer = (TiledMapTileLayer) map.getLayers().get(2);
 		//map.getLayers().get(0).setVisible(false);
 		init();
 		buildGraph();

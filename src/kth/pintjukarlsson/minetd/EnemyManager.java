@@ -32,9 +32,8 @@ public class EnemyManager {
 		game = g;
 		numEnemies = MAX_ENEMIES;
 		enemyHP = 10;
-		enemySpeed = 1;
-		enemies.add(new Enemy(x, y, enemyHP, enemySpeed, game, startToGoal));
-	}
+		enemySpeed = 2;
+		}
 	
 	// Spawns a new wave of enemies in a square at the default spawn location
 	private void spawnWave() {
@@ -49,7 +48,10 @@ public class EnemyManager {
 		enemySpeed += 1;
 		
 	}
-	
+	public void init(){
+		this.startToGoal =  game.getLevel().getPathStartToFinish();
+		enemies.add(new Enemy(startToGoal[0].getX(), startToGoal[0].getY(), enemyHP, enemySpeed,game,this.startToGoal));
+	}
 	// Runs the Update() method for each existing enemy
 	public void Update() {
 		for (Enemy e : enemies)

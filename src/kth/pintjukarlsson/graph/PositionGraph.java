@@ -23,6 +23,7 @@ public class PositionGraph {
 	 * and are allocated only when needed.
 	 */
 	private final Hashtable<Integer, ArrayList<ImuteblePosition>> edges;
+	private float[][] cost;
 	public void setWidth(int width) {
 		this.width = width;
 	}
@@ -50,6 +51,7 @@ public class PositionGraph {
 			throw new IllegalArgumentException("h = " + h);
 		edges = new Hashtable<Integer, ArrayList<ImuteblePosition>>(w*h+1);
 		width=w;hight=h;
+		cost=new float[h*w][w*h];
 		
 	}
 
@@ -77,6 +79,7 @@ public class PositionGraph {
 		}
 		numEdges++;
 		edges.get(toKey(from)).add(to);
+		this.cost[from.getX()+from.getY()][to.getX()+to.getY()]= from.distance(to);
 		
 	}
 
@@ -141,6 +144,17 @@ public class PositionGraph {
 				 return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * 
+	 */
+	 
+	public float cost(ImuteblePosition from, ImuteblePosition to) {
+		if(addInvariantchek(from, to))
+			throw new IllegalArgumentException("from or to is outside of the range of cornerns");
+		return this.cost[from.getX()+from.getY()][to.getX()+to.getY()];
+		
 	}
 
 	

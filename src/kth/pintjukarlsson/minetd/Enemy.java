@@ -5,7 +5,9 @@ import kth.pintjukarlsson.graph.ImuteblePosition;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 
@@ -18,6 +20,10 @@ public class Enemy extends Entity {
 	private AssetManager assetManager;
 	private ImuteblePosition[] path;
 	private int nextGoal=0;
+	private Animation walk;
+	private Texture walkcyle;
+	private boolean facesLeft = true;
+	private float internalTime = 0;
 	
 	/**
 	 * Creates a new enemy with full hitpoints at position x, y.
@@ -104,6 +110,10 @@ public class Enemy extends Entity {
 		dir.sub(this.getPos());
 		dir.nor();
 		dir.scl(speed*Gdx.graphics.getDeltaTime());
+		if(dir.x<0)
+			facesLeft = true;
+		else
+			facesLeft = false;
 		this.translate(dir);
 		if(nextTarget.epsilonEquals(getPos(), 0.1f)){
 			if((nextGoal+1)<path.length){
@@ -119,10 +129,21 @@ public class Enemy extends Entity {
 	public void Draw(SpriteBatch batch){
 		if(getTexture()==null)
 			init();
-		super.Draw(batch);
+		internalTime+=Gdx.graphics.getDeltaTime();
+		TextureRegion frame = walk.getKeyFrame(internalTime);
+		
+		if(facesLeft) {
+			batch.draw(frame, getPos().x, getPos().y, 1, 1);
+			} else {
+			batch.draw(frame, getPos().x+1, getPos().y, -1, 1);
+		}
 	}
 	private void init()  {
 		assetManager = getGame().getAssetManager();
-		setTexture(assetManager.get("data/pony.png", Texture.class));
+		walkcyle=assetManager.get("data/pony.png", Texture.class);
+		TextureRegion[] regions = TextureRegion.split(walkcyle, 39, 35)[2];
+		walk = new Animation(0.15f, regions[0], regions[1], regions[2], regions[3]);
+		walk.setPlayMode(Animation.LOOP);
+		
 	}
 }

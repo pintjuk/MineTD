@@ -62,8 +62,8 @@ public class MouseInputAdapter extends InputAdapter {
 		
 		Vector3 m = new Vector3();
 		camera.unproject(m.set(screenX, screenY, 0));
-		int mapx=(int)(m.x*2);
-		int mapy=(int)(m.y*2);
+		int mapx=(int)(m.x);
+		int mapy=(int)(m.y);
 		if(Buttons.RIGHT==button){
 			if(level.spotFree(mapx, mapy))
 				level.setTile(1, mapx,mapy);

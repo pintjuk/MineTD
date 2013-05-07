@@ -18,6 +18,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 public class MineTD 
 	extends Game
@@ -77,13 +79,17 @@ public class MineTD
 		input.init();
 		InMultiplexer.addProcessor(this.input);
 		
+		enemiesManager.init();
 		
+		camera.translate(new Vector2((float) level.getFinish().getX()-camera.position.x, (float)  level.getFinish().getY()-camera.position.y));
 	}
 
 	private void loadAssets() {
 		assetManager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
 		assetManager.load("data/pony.png", Texture.class);
 		assetManager.load("data/map.tmx", TiledMap.class);
+		assetManager.load("data/map1.tmx", TiledMap.class);
+		assetManager.load("data/map2.tmx", TiledMap.class);
 		assetManager.finishLoading();
 	}
 
@@ -93,7 +99,7 @@ public class MineTD
 
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, (w / h) * 10, 10);
-		camera.zoom = 2.5f;
+		camera.zoom = 1.5f;
 		camera.update();
 	}
 
@@ -115,17 +121,13 @@ public class MineTD
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		level.Draw(camera);
-		
+		level.DrawPathGraph();
 		getBatch().begin();
-		//batch.setTransformMatrix(camera.view);
-		//batch.setProjectionMatrix(camera.projection);
+
 		enemiesManager.Draw(getBatch());
 		getBatch().end();
 		
-		//level.Draw(camera);
-		level.DrawPathGraph();
-		//level.DrawPathGraph();
-		//batch.setProjectionMatrix(camera.combined);
+
 	
 		
 	}
