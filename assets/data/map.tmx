@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="100" height="100" tilewidth="16" tileheight="16">
+ <tileset firstgid="1" name="BlockCSS" tilewidth="16" tileheight="16">
+  <image source="BlockCSS.png" width="512" height="512"/>
+ </tileset>
+ <layer name="bg" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJztwwEJAAAMBKHr8v07DpZDwVVTVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/AUUxV3w=
+  </data>
+ </layer>
+ <layer name="bgdecore" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJztwTEBAAAAwqD1T+1lC6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAbnEAAAQ==
+  </data>
+ </layer>
+ <layer name="stuff" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJztm1luIzEQQx34e+5/oTlJTpLfhqClFrKqpBYBIYDjVpF8LWdzfj+fz+9dW69vsSXxLJH1Ooks3rN79S5PL5ZrrL6kTLL7RGXO9rLy2Xu85cDiIRVihqWHjHtGwoPdt0Te+V5mbA6z+RoekULeCwwerFxSHlHy9iLxjWLBOkcjHtbONELeo6x+enOZ+/d4eLJKhOoFuR8ynzVz7/UKkdPrqyqLngek3xkP9D3EuD+zWHi8V+ARyaKnbA6SXkc/l3v9M7vo7WlVNIfVzAgezGwIsfuXzpn93srrFZU3Sgw/1szZPBDy7q3JxDhPkTxQYnrZhYcng0fojIh5LG9VeTAzIuZGeY3kwb63ongws0h4/Ff6ifLu4eDxxdq3x0Oqqiy8/hnzPDy8M9B50RwivWnnrn4ezM6DZJDpWzp/9b6SSpl25NB6lj53h/f5aJXt90QeFmV7nuXYjYdV2b6lmXbgYZE2t1VI75pOonkgckiei5RmX28/UTwsOTzZkZKcQ9SK4LHK+R08Nroewd8jZldZ5+P5uKf/0eeZOoFH2xGrv8vDd0aQijof7axdeTx7YnSG4CHd4zQeVXV51NNbeOyuiI4uD7kuj3q6POrotPOxM5Oofnb/+0eGTuWxs07iEaV/P7y9T+Fxii6POvLmvjyw8ua9PLjynolMHk+fp/H5Nh+fj2tY7MSDdd40e2rOvaaXDB6tV400PWjl5dG7TttNBR6aTpk8PB5GZ786j1E2Tx+R0mSszGOVbwdp81blIc1XXWweq//HQXLwcHvukSVL9io8PFlWXWTI2kE2D1SO2fVMITqtysO7F5KF5FoUB08XSB7a2VE8pNeyvGquQfFg5rLk7flZiXXfRPNg5kLzivJqneH9//OIbEgekXMts2c8RqqQuSoP70wJj9msqix25dEy0eydkbcyD9Q8C4/P4vMVVqQ/9KzV14/dWETyYMzRfH/1VHbn2UxY+1d5/y6rL3RnrRgsTuTR607T30wsv+y/gVRYSLG9voGHl0+kt5bHW5hUXT0el0k9HpdJHR7Znt6+Lo9a6/KotRg8LlcMD+SeFe6LHVcFHpdFHR6Xg70PyfO03V4Weh4sZpeFrmtLb5cHjsdqedjOZmV3UGmhWKDZvnUxzsbl4GMxkuZ+z2awI+tRXywe0dmy+tyBh9efJm8Wf9TcWY9eDlo+CL7RPJCvA6vcIx4zMfhZmEacI9brgYbHSlE82uySblD9RWdsu9eemSy/b1g9XR5x6w9YvIeA
+  </data>
+ </layer>
+ <layer name="decore" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt1cEJwzAMBVB7pa4WaL1GZulEWSK9toZA3BAfjU3yHghfhYT8QwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4My7Uoxj6t3Ajc1xr2fs3Q2laB/dlZlR20ctY+RMW+5jLHkf6+/9FLWE/4w5Zs3ardvrS9ucH2GvvKOzf8ottZfnnA538KrM3T7a+AKsQR9B
+  </data>
+ </layer>
+</map>

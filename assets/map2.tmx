@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="100" height="100" tilewidth="16" tileheight="16">
+ <tileset firstgid="1" name="BlockCSS" tilewidth="16" tileheight="16">
+  <image source="BlockCSS.png" width="512" height="512"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt10EKAyEQRUH7aHP/S4VZSMRIdtEfpgp63/AWtq0BAAA8T9XpDRjpkUWPLHpk0SOLHhnuDFpkqPbu0ZNcB/d5Oj1yVPvscc81DL9Xqxl6dJrssWzxpYcme8231dxAj73GHqsWeuzVe2iRYe7h3TjL3zxHv60AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgP/3AgNCBtw=
+  </data>
+ </layer>
+ <layer name="lol" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt1cEJwCAUREFrsf8icxYi0cCaT5gB77IPtDUAAAAAgLr61xdgoEc9mtRy16NPDnk7O+uSt7uvJllvttUkZ2VX/0ne06Z2P2ulBefM3iAtAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4swv4dAWV
+  </data>
+ </layer>
+</map>
