@@ -286,7 +286,7 @@ public class PositionGraph {
 				if(nexts==null)
 					continue;
 				for(ImuteblePosition b: nexts)
-					this.links.add(new LinkDebug (x+0.5f, y+0.5f, b.getX()+0.5f, b.getY()+0.5f, 200));
+					this.links.add(new LinkDebug (x+0.5f, y+0.5f, b.getX()+0.4f, b.getY()+0.4f, 200));
 			}
 		}
 		/*for(Integer key: edges.keySet()){

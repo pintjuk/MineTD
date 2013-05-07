@@ -45,7 +45,7 @@ public class Dijkstra {
 
 			}
 		}
-		System.gc();
+	//System.gc();
 		return new ImuteblePosition[]{};
 	}
 	

@@ -123,7 +123,6 @@ public class MineTD
 		level.Draw(camera);
 		level.DrawPathGraph();
 		getBatch().begin();
-
 		enemiesManager.Draw(getBatch());
 		getBatch().end();
 		
