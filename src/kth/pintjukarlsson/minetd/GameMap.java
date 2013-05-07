@@ -15,20 +15,25 @@ import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 public class GameMap {
 	private TiledMap map;
-	private TiledMapRenderer renderer;
+	private OrthogonalTiledMapRenderer renderer;
 	private PositionGraph graph;
 	private ArrayList<LinkDebug> links = new ArrayList<LinkDebug>();
 	private TiledMapTileLayer pathingLayer;
 	Vector2 testPosition= new Vector2();
 	LinkDebug lol = new LinkDebug(0, 0, 0, 0, 0);
 	
+	public OrthogonalTiledMapRenderer getRenderer(){
+		return  renderer;
+	}
 	void init(){
-		renderer = new OrthogonalTiledMapRenderer(map, 1f /32f);
+		renderer = new OrthogonalTiledMapRenderer(map, 1f /16f);
+		
 		graph = new PositionGraph(((TiledMapTileLayer)map.getLayers().get(1)).getWidth(), 
 								  ((TiledMapTileLayer)map.getLayers().get(1)).getWidth());
 	}
@@ -58,6 +63,8 @@ public class GameMap {
 					Cell cell = layer.getCell(x, y);
 					if (cell == null) {
 						setGraphTile(x, y, layer);
+					}else{
+						System.out.print(cell.getTile().getId());
 					}
 				}
 			}
@@ -86,6 +93,7 @@ public class GameMap {
 	 */
 	public boolean setTile(int tile, int x, int y){
 		Cell cell = new Cell();
+		cell.setTile(pathingLayer.getCell(1, 1).getTile());
 		pathingLayer.setCell(x, y, cell);
 		graph.removeAllLinksTo(new ImuteblePosition(x, y));
 		return true;
@@ -93,13 +101,19 @@ public class GameMap {
 	
 	public boolean  removeTile(int tile, int x, int y){
 		pathingLayer.setCell(x, y, null);
+		
 		setGraphTile(x, y, pathingLayer);
 		return false;
+	}
+	
+	public boolean spotFree(int x, int y){
+		return pathingLayer.getCell(x, y)==null;
 	}
 	
 	private void setGraphTile(int x , int y, TiledMapTileLayer layer){
 		int h=layer.getHeight();
 		int w= layer.getWidth();
+		
 		if(layer.getCell(x+1, y)==null &&x<w)
 			graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x+1, y));
 		if(layer.getCell(x-1, y)==null&&x>0)
@@ -125,10 +139,7 @@ public class GameMap {
 	}
 	
 	public void loadAssets(AssetManager assetManager){
-		assetManager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
-		assetManager.load("data/level1.tmx", TiledMap.class);
-		assetManager.finishLoading();
-		map = assetManager.get("data/level1.tmx");
+		map = assetManager.get("data/map.tmx");
 		pathingLayer = (TiledMapTileLayer) map.getLayers().get(1);
 		//map.getLayers().get(0).setVisible(false);
 		init();

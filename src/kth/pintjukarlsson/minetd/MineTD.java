@@ -7,6 +7,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,6 +15,8 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Matrix4;
 
 public class MineTD 
@@ -24,7 +27,7 @@ public class MineTD
 	}
 
 	public SpriteBatch getBatch() {
-		return batch;
+	  return level.getRenderer().getSpriteBatch();
 	}
 
 	public InputMultiplexer getInMultiplexer() {
@@ -46,10 +49,10 @@ public class MineTD
 	
 
 	private OrthographicCamera camera;
-	private SpriteBatch batch;
 	private InputMultiplexer InMultiplexer;
 	private AssetManager assetManager;
 	private MouseInputAdapter input;
+	private EnemyManager enemiesManager = new EnemyManager(1, 0, this);
 	private GameMap level;
 	private int w, h;
 	@Override
@@ -57,29 +60,31 @@ public class MineTD
 		InMultiplexer = new InputMultiplexer();
 		Gdx.input.setInputProcessor(InMultiplexer);
 		assetManager = new AssetManager();
+		loadAssets();
 		
 		setupCam();
 		
 		this.input = new MouseInputAdapter(this);
 		
 		
-		batch = new SpriteBatch();
 		
 		level = new GameMap();
 		level.loadAssets(assetManager);
-		level.setTile(1, 2, 7);
-		level.setTile(1, 2, 7);
-		level.setTile(1, 3, 7);
-		level.setTile(1, 2, 6);
-		level.removeTile(0, 2, 7);
-		level.removeTile(0, 0, 0);
-		level.removeTile(0, 0, 2);
-		level.removeTile(0, 0, 1);
-		level.repathtest();
+		
+		//level.repathtest();
 		level.resetDebugDraw();
 		
 		input.init();
 		InMultiplexer.addProcessor(this.input);
+		
+		
+	}
+
+	private void loadAssets() {
+		assetManager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
+		assetManager.load("data/pony.png", Texture.class);
+		assetManager.load("data/map.tmx", TiledMap.class);
+		assetManager.finishLoading();
 	}
 
 	private void setupCam() {
@@ -88,13 +93,12 @@ public class MineTD
 
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, (w / h) * 10, 10);
-		camera.zoom = 2f;
+		camera.zoom = 2.5f;
 		camera.update();
 	}
 
 	@Override
 	public void dispose() {
-		batch.dispose();
 		assetManager.dispose();
 		
 	}
@@ -108,23 +112,27 @@ public class MineTD
 		updateGame();
 		
 		//rander 
-		System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		//level.Draw(camera);
-		System.out.println(camera.view);
-		System.out.println(camera.projection);
-		camera.apply(Gdx.gl10);
+		level.Draw(camera);
 		
+		getBatch().begin();
+		//batch.setTransformMatrix(camera.view);
+		//batch.setProjectionMatrix(camera.projection);
+		enemiesManager.Draw(getBatch());
+		getBatch().end();
+		
+		//level.Draw(camera);
 		level.DrawPathGraph();
+		//level.DrawPathGraph();
 		//batch.setProjectionMatrix(camera.combined);
-		input.testDraw(w, h);
+	
 		
 	}
 
 	private void updateGame() {
 		camera.update();
-		
+		enemiesManager.Update();
 	}
 
 	@Override

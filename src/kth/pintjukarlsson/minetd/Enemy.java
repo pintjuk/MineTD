@@ -1,6 +1,12 @@
 package kth.pintjukarlsson.minetd;
 
+import kth.pintjukarlsson.graph.ImuteblePosition;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 public class Enemy extends Entity {
@@ -9,17 +15,21 @@ public class Enemy extends Entity {
 	private int maxhp;
 	
 	private int speed;
+	private AssetManager assetManager;
+	private ImuteblePosition[] path;
+	private int nextGoal=0;
 	
 	/**
 	 * Creates a new enemy with full hitpoints at position x, y.
 	 * The enemy moves at (speed) (units) per second.
 	 * 
 	 */
-	public Enemy(int x, int y, int maxhp, int speed) {
-		super(x, y);
+	public Enemy(int x, int y, int maxhp, int speed, MineTD g, ImuteblePosition[] path) {
+		super(x, y, g);
 		this.maxhp = maxhp;
 		hp = maxhp;
 		this.speed = speed;
+		this.path = path;
 	}
 	// Health setters/getters and alive check
 	/**
@@ -89,11 +99,30 @@ public class Enemy extends Entity {
 	 */
 	@Override
 	public void Update() {
+		Vector2 nextTarget = new Vector2((float)path[nextGoal].getX(),(float)path[nextGoal].getY());
+		Vector2 dir = new Vector2(nextTarget);
+		dir.sub(this.getPos());
+		dir.nor();
+		dir.scl(speed*Gdx.graphics.getDeltaTime());
+		this.translate(dir);
+		if(nextTarget.epsilonEquals(getPos(), 0.1f)){
+			if((nextGoal+1)<path.length){
+				nextGoal++;
+			}
+		}
+		
 	}
 	/**
 	 * {@inheritDoc Entity}
 	 */
 	@Override
-	public void Draw() {
+	public void Draw(SpriteBatch batch){
+		if(getTexture()==null)
+			init();
+		super.Draw(batch);
+	}
+	private void init()  {
+		assetManager = getGame().getAssetManager();
+		setTexture(assetManager.get("data/pony.png", Texture.class));
 	}
 }
