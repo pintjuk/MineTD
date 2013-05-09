@@ -279,6 +279,9 @@ public class PositionGraph {
 
 	private ArrayList<LinkDebug> links = new ArrayList<LinkDebug>();
 	public void reBuildDibugImg(){
+		for(LinkDebug e: links){
+			e.dispole();
+		}
 		links.clear();
 		for(int y= 0;y<getHight();y++){
 			for(int x= 0;x<getWidth();x++){

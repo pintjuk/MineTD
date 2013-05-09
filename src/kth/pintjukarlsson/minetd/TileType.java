@@ -6,20 +6,21 @@ import java.util.Map;
 
 
 public enum TileType {
-	STONE(1, 10),
-	DIRT(2, 2),
-	BEDROCK(3, 15),
-	SAND(4, 5),
-	GRAVEL(5, 6),
-	LAVA(6, 20);
+	GRAVEL(2,7, 1.2f),
+	DIRT(3,8, 1.1f),
+	BEDROCK(3,3, 15),
+	SAND(4,3, 5),
+	STONE(5,5, 6),
+	LAVA(6,6, 20);
 	private int index;
+	private int buildIndex;
 	private float value;
 	
 	private static final Map<Integer,TileType> lookup 
     = new HashMap<Integer,TileType>();
 	
-	TileType(int i, float v){
-		index=i; value =v;
+	TileType(int i, int bi ,float v){
+		index=i; value =v; buildIndex = bi;
 	}
 
 	public int getIndex() {
@@ -32,10 +33,19 @@ public enum TileType {
 
 
 	static {
-	     for(TileType s : EnumSet.allOf(TileType.class))
+	     for(TileType s : EnumSet.allOf(TileType.class)){
 	          lookup.put(s.getIndex(), s);
+	          if(!lookup.containsKey(s.getBuildIndex()))
+	        	  lookup.put(s.getBuildIndex(), s);
+	     }
 	}
 	
+	public int getBuildIndex() {
+		return buildIndex;
+	}
+
+	
+
 	public static TileType get(int index) { 
 	      return lookup.get(index); 
 	 }

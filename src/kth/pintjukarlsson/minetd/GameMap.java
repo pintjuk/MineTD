@@ -2,6 +2,8 @@ package kth.pintjukarlsson.minetd;
 
 import java.util.ArrayList;
 
+import javax.crypto.Cipher;
+
 import kth.pintjukarlsson.debugdraw.LinkDebug;
 import kth.pintjukarlsson.graph.Dijkstra;
 import kth.pintjukarlsson.graph.ImuteblePosition;
@@ -30,10 +32,7 @@ public class GameMap {
 	private TiledMap map;
 	private OrthogonalTiledMapRenderer renderer;
 	private PositionGraph graph;
-	private ArrayList<LinkDebug> links = new ArrayList<LinkDebug>();
 	private TiledMapTileLayer pathingLayer;
-	Vector2 testPosition= new Vector2();
-	LinkDebug lol = new LinkDebug(0, 0, 0, 0, 0);
 	private ImuteblePosition span, finish;
 	
 	public OrthogonalTiledMapRenderer getRenderer(){
@@ -54,9 +53,14 @@ public class GameMap {
 	public void DrawPathGraph(){
 		
 		graph.DibugDraw();
-		for(LinkDebug d: links){
-			d.Draw();
-		}
+		
+	}
+	
+	public TileType getTileType(int x, int y){
+		Cell c = pathingLayer.getCell(x, y);
+		if(c==null)
+			return null;
+		return TileType.get(c.getTile().getId());
 	}
 
 	private void buildGraph(){
@@ -64,7 +68,6 @@ public class GameMap {
 			TiledMapTileLayer layer = pathingLayer;
 			int h=layer.getHeight();
 			int w= layer.getWidth();
-			ArrayList<ImuteblePosition> torm = new ArrayList<ImuteblePosition>();
 			for (int y = 0; y <= h; y++){
 				for (int x = 0; x <= w; x++){
 					
@@ -72,43 +75,27 @@ public class GameMap {
 					if (cell == null) {
 						setGraphTile(x, y, layer);
 					}else{
-						if(cell.getTile().getId()==269){
-							finish = new ImuteblePosition(x, y);
-							setGraphTile(x, y, layer);
-							//((TiledMapTileLayer)map.getLayers().get(1)).setCell(x, y, cell);
-							//removeTile(0, x, y);
+						if(cell.getTile().getProperties().get("type")!=null)
+							if(cell.getTile().getProperties().get("type").equals("finish")){
+								finish = new ImuteblePosition(x, y);
+								setGraphTile(x, y, layer);
+								((TiledMapTileLayer)map.getLayers().get(1)).setCell(x, y, cell);
+								pathingLayer.setCell(x, y, null);
+							}
+						if(cell.getTile().getProperties().get("type")!=null)
+							if(cell.getTile().getProperties().get("type").equals("start")){
+								span = new ImuteblePosition(x, y);
+								setGraphTile(x, y, layer);
+								((TiledMapTileLayer)map.getLayers().get(1)).setCell(x, y, cell);
+								pathingLayer.setCell(x, y, null);
+							}
 						
-							
-						}else 
-						if(cell.getTile().getId()==196){
-							span = new ImuteblePosition(x, y);
-							setGraphTile(x, y, layer);
-							//((TiledMapTileLayer)map.getLayers().get(1)).setCell(x, y, cell);
-							//removeTile(0, x, y);
-						}
-						/*if(cell.getTile().getId()==226||cell.getTile().getId()==3){
-							torm.add(new ImuteblePosition(x, y));
-						}else{
-							System.out.println(cell.getTile().getId());
-						}*/
 					}
 				}
 			}
-			
-			for(ImuteblePosition p: torm){
-				removeTile(0, p.getX(), p.getY());
-			}
 	}
 	
-	public void repathtest(){
-		links.clear();
-		ImuteblePosition[] i = getPath(new ImuteblePosition(0, 7), new ImuteblePosition(17+13, 2));
-		ImuteblePosition old = i[0];
-		for(ImuteblePosition z: i){
-			links.add(new LinkDebug(old.getX()+0.5f,old.getY()+0.5f, z.getX()+0.5f, z.getY()+0.5f, 0));
-			old = z;
-		}
-	}
+	
 	/**
 	 * Sets a tile on the mop
 	 * @param tile
@@ -120,9 +107,9 @@ public class GameMap {
 	 * @return
 	 * returns true if the tile was set sucsesfuly 
 	 */
-	public boolean setTile(int tile, int x, int y){
-		//if (getPath(this.finish, new ImuteblePosition(x, y)).length==0)
-		//	return false;
+	public boolean setTile(TileType tile, int x, int y){
+		if (getPath(new ImuteblePosition(x, y), this.finish).length==0)
+			return false;
 		graph.removeAllLinksTo(new ImuteblePosition(x, y));
 		int length = getPathStartToFinish().length;
 		if(length==0){
@@ -130,24 +117,26 @@ public class GameMap {
 			graph.reBuildDibugImg();
 			return false;
 		}
-			
-		Cell cell = new Cell();
-		cell.setTile(pathingLayer.getCell(1, 1).getTile());
+		Cell cell = new BuildingCell();
+		cell.setTile(map.getTileSets().getTile(tile.getBuildIndex()));
+		
 		pathingLayer.setCell(x, y, cell);
 		graph.reBuildDibugImg();
 		return true;
 	}
 	
-	public boolean  removeTile(int tile, int x, int y){
+	public TileType  removeTile( int x, int y){
+		TileType t = getTileType(x, y);
 		if(!hasNullNighbour(x,y))
-		  return false;
+		  return null;
 		
 		pathingLayer.setCell(x, y, null);
 		
 		setGraphTile(x, y, pathingLayer);
 		graph.reBuildDibugImg();
-		return true;
+		return t;
 	}
+	
 	
 	private boolean hasNullNighbour(int x, int y) {
 		int h=this.pathingLayer.getHeight();
@@ -198,25 +187,25 @@ public class GameMap {
 		
 		//there seems to be bugs in deagonal links 
 		
-		/*if((layer.getCell(x+1, y+1)==null&&y<h&&x<w)
-				&&(layer.getCell(x+1, y)==null &&x<w)
-				&&(layer.getCell(x, y+1)==null&&y<h))
-			graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x+1, y+1));
+		/*if(layer.getCell(x+1, y+1)==null&&y<h&&x<w
+				&&layer.getCell(x+1, y)==null
+				&&layer.getCell(x, y+1)==null)
+			graph.addBi(new ImuteblePosition(x, y), new ImuteblePosition(x+1, y+1));
 		
-		if((layer.getCell(x-1, y-1)==null&&y>0&&x>0)
-				&&(layer.getCell(x-1, y)==null&&x>0)
-				&&(layer.getCell(x, y-1)==null&&y>0))
-			graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x-1, y-1));
+		if(layer.getCell(x-1, y-1)==null&&y>0&&x>0
+				&&layer.getCell(x-1, y)==null
+				&&layer.getCell(x, y-1)==null)
+			graph.addBi(new ImuteblePosition(x, y), new ImuteblePosition(x-1, y-1));
 		
-		if((layer.getCell(x-1, y+1)==null&&y<h&&x>0)
-				&&(layer.getCell(x-1, y)==null&&x>0)
-				&&(layer.getCell(x, y+1)==null&&y<h))
-			graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x-1, y+1));
+		if(layer.getCell(x-1, y+1)==null&&y<h&&x>0
+				&&layer.getCell(x-1, y)==null
+				&&layer.getCell(x, y+1)==null)
+			graph.addBi(new ImuteblePosition(x, y), new ImuteblePosition(x-1, y+1));
 		
-		if((layer.getCell(x+1, y-1)==null&&x<w&&y>0)
-				&&(layer.getCell(x+1, y)==null &&x<w)
-				&&(layer.getCell(x, y-1)==null&&y>0))
-		graph.add(new ImuteblePosition(x, y), new ImuteblePosition(x+1, y-1));*/
+		if(layer.getCell(x+1, y-1)==null&&x<w&&y>0
+				&&layer.getCell(x+1, y)==null
+				&&layer.getCell(x, y-1)==null)
+			graph.addBi(new ImuteblePosition(x, y), new ImuteblePosition(x+1, y-1));*/
 	
 		
 	}
@@ -236,5 +225,12 @@ public class GameMap {
 	
 	public void resetDebugDraw(){
 		graph.reBuildDibugImg();
+	}
+	public boolean hasBuilt(int x, int y) {
+		Cell c = pathingLayer.getCell(x, y);
+		if(c != null)
+			if(c instanceof BuildingCell)
+				return true;
+		return false;
 	}
 }

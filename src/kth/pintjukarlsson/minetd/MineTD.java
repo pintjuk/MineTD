@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -53,9 +54,10 @@ public class MineTD
 	private OrthographicCamera camera;
 	private InputMultiplexer InMultiplexer;
 	private AssetManager assetManager;
-	private MouseInputAdapter input;
+	private MouseInputAdapter input= new MouseInputAdapter(this);
 	private EnemyManager enemiesManager = new EnemyManager(1, 0, this);
 	private GameMap level;
+	private BuildingManager buildingManager = new BuildingManager(this);
 	private int w, h;
 	@Override
 	public void create() {		
@@ -66,32 +68,35 @@ public class MineTD
 		
 		setupCam();
 		
-		this.input = new MouseInputAdapter(this);
-		
-		
-		
 		level = new GameMap();
 		level.loadAssets(assetManager);
-		
-		//level.repathtest();
+
 		level.resetDebugDraw();
 		
 		input.init();
 		InMultiplexer.addProcessor(this.input);
 		
 		enemiesManager.init();
-		
+		buildingManager.init();
 		camera.translate(new Vector2((float) level.getFinish().getX()-camera.position.x, (float)  level.getFinish().getY()-camera.position.y));
 	}
 
 	private void loadAssets() {
 		assetManager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
 		assetManager.load("data/pony.png", Texture.class);
+		assetManager.load("data/gun.png", Texture.class);
+		assetManager.load("data/exp.png", Texture.class);
 		assetManager.load("data/map.tmx", TiledMap.class);
 		assetManager.load("data/map1.tmx", TiledMap.class);
 		assetManager.load("data/map2.tmx", TiledMap.class);
 		assetManager.finishLoading();
 	}
+
+	public EnemyManager getEnemiesManager() {
+		return enemiesManager;
+	}
+
+	
 
 	private void setupCam() {
 		float w = Gdx.graphics.getWidth();
@@ -121,19 +126,18 @@ public class MineTD
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		level.Draw(camera);
-		level.DrawPathGraph();
+		//level.DrawPathGraph();
 		getBatch().begin();
 		enemiesManager.Draw(getBatch());
+		buildingManager.Draw(getBatch());
 		getBatch().end();
-		
-
-	
 		
 	}
 
 	private void updateGame() {
 		camera.update();
 		enemiesManager.Update();
+		buildingManager.Update();
 	}
 
 	@Override

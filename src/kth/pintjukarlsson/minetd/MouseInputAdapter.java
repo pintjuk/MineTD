@@ -65,10 +65,24 @@ public class MouseInputAdapter extends InputAdapter {
 		int mapx=(int)(m.x);
 		int mapy=(int)(m.y);
 		if(Buttons.RIGHT==button){
-			if(level.spotFree(mapx, mapy))
-				level.setTile(1, mapx,mapy);
-			else
-				level.removeTile(1, mapx,mapy);
+			if(level.spotFree(mapx, mapy)){
+				if(level.setTile(TileType.DIRT, mapx,mapy)){
+					for(MapInteractionListener i: milisteners){
+						i.onTileAdded(mapx,mapy, TileType.DIRT);
+					}
+				}
+				
+			}
+			else {
+				//level.removeTile(1, mapx,mapy);
+				TileType t =level.removeTile( mapx,mapy);
+				if(t!=null){
+					for(MapInteractionListener i: milisteners){
+						i.onTileRM(mapx,mapy, t);
+					}
+				}
+				
+			}
 		}
 		//level.resetDebugDraw();
 		if(Buttons.LEFT==button)
