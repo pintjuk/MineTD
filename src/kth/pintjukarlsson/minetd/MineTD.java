@@ -58,12 +58,15 @@ public class MineTD
 	private EnemyManager enemiesManager = new EnemyManager(1, 0, this);
 	private GameMap level;
 	private BuildingManager buildingManager = new BuildingManager(this);
+	private PlayerStats playerStats;
+	private SpriteBatch guiBatch = new SpriteBatch();
 	private int w, h;
 	@Override
 	public void create() {		
 		InMultiplexer = new InputMultiplexer();
 		Gdx.input.setInputProcessor(InMultiplexer);
 		assetManager = new AssetManager();
+		playerStats = new PlayerStats();
 		loadAssets();
 		
 		setupCam();
@@ -79,6 +82,8 @@ public class MineTD
 		enemiesManager.init();
 		buildingManager.init();
 		camera.translate(new Vector2((float) level.getFinish().getX()-camera.position.x, (float)  level.getFinish().getY()-camera.position.y));
+	
+		
 	}
 
 	private void loadAssets() {
@@ -126,11 +131,13 @@ public class MineTD
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		level.Draw(camera);
-		//level.DrawPathGraph();
+		level.DrawPathGraph();
 		getBatch().begin();
 		enemiesManager.Draw(getBatch());
-		buildingManager.Draw(getBatch());
 		getBatch().end();
+		guiBatch.begin();
+		buildingManager.Draw(guiBatch);
+		guiBatch.end();
 		
 	}
 
