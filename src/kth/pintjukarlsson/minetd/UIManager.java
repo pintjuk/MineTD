@@ -33,7 +33,7 @@ public class UIManager implements UIService {
 	 * {@inheritDoc UIService}
 	 */
 	@Override
-	public void create() {
+	public void init() {
 		float w = Gdx.graphics.getWidth();
 		h = 100;
 
@@ -58,7 +58,7 @@ public class UIManager implements UIService {
 		
 		
 		// Create a button with the "default" TextButtonStyle.
-		final TextButton button = new TextButton("New Game", skin);
+		final TextButton button = new TextButton("Click me!", skin);
 		table.add(button);
 		
 		// Add a Listener to the button. ChangeListener is fired when the button's checked
@@ -70,7 +70,7 @@ public class UIManager implements UIService {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				System.out.println("Clicked! Is checked: " + button.isChecked());
-				//button.setText("Good job!");
+				button.setText("Good job!");
 			}
 		});
 		
@@ -89,9 +89,10 @@ public class UIManager implements UIService {
 	 * {@inheritDoc UIService}
 	 */
 	@Override
-	public void render() {
+	public void Draw() {
 		//Gdx.gl.glClearColor(0.2f,  0.2f,  0.2f,  1);
 		//Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		
 		stage.act(Gdx.graphics.getDeltaTime());
 		stage.draw();
 		
