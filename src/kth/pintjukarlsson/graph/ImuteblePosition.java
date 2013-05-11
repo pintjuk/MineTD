@@ -1,5 +1,6 @@
 package kth.pintjukarlsson.graph;
 
+import com.badlogic.gdx.math.Vector2;
 import com.sun.jndi.url.iiopname.iiopnameURLContextFactory;
 
 public class ImuteblePosition {
@@ -10,6 +11,9 @@ public class ImuteblePosition {
 		this.x = x;
 		this.y=y;
 		this.hash = x+y*10000;
+	}
+	public Vector2 getVec(){
+		return new Vector2(x, y);
 	}
 
 	public int getX() {

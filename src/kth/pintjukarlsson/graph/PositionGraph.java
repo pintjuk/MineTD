@@ -23,6 +23,7 @@ public class PositionGraph {
 	 * and are allocated only when needed.
 	 */
 	private final Hashtable<Integer, ArrayList<ImuteblePosition>> edges;
+	private float[][] cost;
 	public void setWidth(int width) {
 		this.width = width;
 	}
@@ -50,6 +51,7 @@ public class PositionGraph {
 			throw new IllegalArgumentException("h = " + h);
 		edges = new Hashtable<Integer, ArrayList<ImuteblePosition>>(w*h+1);
 		width=w;hight=h;
+		cost=new float[h*w][w*h];
 		
 	}
 
@@ -77,6 +79,7 @@ public class PositionGraph {
 		}
 		numEdges++;
 		edges.get(toKey(from)).add(to);
+		this.cost[from.getX()+from.getY()][to.getX()+to.getY()]= from.distance(to);
 		
 	}
 
@@ -141,6 +144,17 @@ public class PositionGraph {
 				 return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * 
+	 */
+	 
+	public float cost(ImuteblePosition from, ImuteblePosition to) {
+		if(addInvariantchek(from, to))
+			throw new IllegalArgumentException("from or to is outside of the range of cornerns");
+		return this.cost[from.getX()+from.getY()][to.getX()+to.getY()];
+		
 	}
 
 	
@@ -265,6 +279,9 @@ public class PositionGraph {
 
 	private ArrayList<LinkDebug> links = new ArrayList<LinkDebug>();
 	public void reBuildDibugImg(){
+		for(LinkDebug e: links){
+			e.dispole();
+		}
 		links.clear();
 		for(int y= 0;y<getHight();y++){
 			for(int x= 0;x<getWidth();x++){
@@ -272,7 +289,7 @@ public class PositionGraph {
 				if(nexts==null)
 					continue;
 				for(ImuteblePosition b: nexts)
-					this.links.add(new LinkDebug (x+0.5f, y+0.5f, b.getX()+0.5f, b.getY()+0.5f, 200));
+					this.links.add(new LinkDebug (x+0.5f, y+0.5f, b.getX()+0.4f, b.getY()+0.4f, 200));
 			}
 		}
 		/*for(Integer key: edges.keySet()){
@@ -282,6 +299,27 @@ public class PositionGraph {
 				links.add(new LinkDebug (vertex1.getX(), vertex1.getY(), vertex2.getX(), vertex2.getY(), 150));
 			}
 		}*/
+	}
+	public void removeAllLinksTo(ImuteblePosition to){
+		 if(edges.get(toKey(to))!=null){
+			 numEdges-=edges.get(toKey(to)).size();
+			 edges.remove(toKey(to));
+		 }
+		 for(int y= 0;y<getHight();y++){
+			for(int x= 0;x<getWidth();x++){
+				ArrayList<ImuteblePosition> nexts = edges.get(toKey(new ImuteblePosition(x, y)));
+				ArrayList<ImuteblePosition> toremove= new ArrayList<>();
+				if(nexts==null)
+					continue;
+				for(ImuteblePosition b: nexts){
+					if(b.equals(to))
+						toremove.add(b);
+				}
+				for(ImuteblePosition b: toremove){
+					nexts.remove(b);
+				}
+			}
+		}
 	}
 	public void DibugDraw(){
 		

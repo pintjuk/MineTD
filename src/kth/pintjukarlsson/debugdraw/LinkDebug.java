@@ -12,11 +12,20 @@ public class LinkDebug {
 			"a_color"));
 
 	public LinkDebug(float x1, float y1, float x2, float y2, int c){
+		
 		line.setVertices(new float[] {
-	            x1/2, y1/2, 0, Color.toFloatBits(200, c, 200, 255),
-	            x2/2, y2/2, 0, Color.toFloatBits(200,c, 200, 255) });
+	            x1, y1, 0, Color.toFloatBits(200, c, 200, 255),
+	            x2, y2, 0, Color.toFloatBits(200,0, 100, 255) });
+	}
+	public LinkDebug(float x1, float y1, float x2, float y2, int c, int t){
+		line.setVertices(new float[] {
+	            x1, y1, 0, Color.toFloatBits(200, c, 200, 255),
+	            x2, y2, 0, Color.toFloatBits(200,0, 100, 255) });
 	}
 	public void Draw(){
 		line.render(GL10.GL_LINE_STRIP);
+	}
+	public void dispole(){
+		line.dispose();
 	}
 }
