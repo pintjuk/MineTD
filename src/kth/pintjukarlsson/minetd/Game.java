@@ -20,11 +20,15 @@ public class Game extends com.badlogic.gdx.Game {
 	private InputMultiplexer InMultiplexer;
 	private AssetManager assetManager;
 	private GameMap level;
+	private UIManager uiManager;
+	
 	@Override
 	public void create() {		
 		InMultiplexer = new InputMultiplexer();
 		Gdx.input.setInputProcessor(InMultiplexer);
 		assetManager = new AssetManager();
+		uiManager = new UIManager();
+		uiManager.create();
 		
 		setupCam();
 		
@@ -66,6 +70,7 @@ public class Game extends com.badlogic.gdx.Game {
 		level.DrawPathGraph();
 		batch.setProjectionMatrix(camera.combined);
 		
+		uiManager.render();
 	}
 
 	private void updateGame() {

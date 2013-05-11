@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class EnemyManager {
 
-	private final static int MAX_ENEMIES = 25;
+	private final static int MAX_ENEMIES = 30;
 	private int[] spawnPos;
 	
 	private Enemy[] enemies;
@@ -15,13 +15,13 @@ public class EnemyManager {
 	
 	/**
 	 *  Creates a new enemy manager that spawns stuff at the location x, y.
-	 *  It starts out with some default values, and uses the maximum number of enemies.
+	 *  It starts out with some default values, including half the maximum number of enemies.
 	 */
 	public EnemyManager(int x, int y) {
 		spawnPos = new int[] {x, y};
 		
 		enemies = new Enemy[MAX_ENEMIES];
-		numEnemies = MAX_ENEMIES;
+		numEnemies = MAX_ENEMIES/2;
 		enemyHP = 10;
 		enemySpeed = 50;
 	}
@@ -37,6 +37,8 @@ public class EnemyManager {
 		// Increase difficulty parameters for next wave
 		enemyHP *= 1.5;
 		enemySpeed += 1;
+		if (numEnemies < MAX_ENEMIES)
+			numEnemies++;
 		
 	}
 	
