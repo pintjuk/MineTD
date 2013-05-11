@@ -60,6 +60,7 @@ public class MineTD
 	private BuildingManager buildingManager = new BuildingManager(this);
 	private PlayerStats playerStats;
 	private SpriteBatch guiBatch = new SpriteBatch();
+	private UIManager uiManager = new UIManager();
 	private int w, h;
 	@Override
 	public void create() {		
@@ -81,6 +82,7 @@ public class MineTD
 		
 		enemiesManager.init();
 		buildingManager.init();
+		uiManager.init();
 		camera.translate(new Vector2((float) level.getFinish().getX()-camera.position.x, (float)  level.getFinish().getY()-camera.position.y));
 	
 		
@@ -134,6 +136,8 @@ public class MineTD
 		level.DrawPathGraph();
 		getBatch().begin();
 		enemiesManager.Draw(getBatch());
+		buildingManager.Draw(getBatch());
+		uiManager.Draw();
 		getBatch().end();
 		guiBatch.begin();
 		buildingManager.Draw(guiBatch);

@@ -10,10 +10,10 @@ import com.badlogic.gdx.math.Vector2;
 
 public class EnemyManager {
 
-	private final static int MAX_ENEMIES = 25;
+	private final static int MAX_ENEMIES = 30;
 	private int[] spawnPos;
 	
-	private ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+	private ArrayList<Enemy> enemies;
 	
 	private int numEnemies;
 	private int enemyHP;
@@ -23,15 +23,16 @@ public class EnemyManager {
 	private ImuteblePosition[] startToGoal;
 	/**
 	 *  Creates a new enemy manager that spawns stuff at the location x, y.
-	 *  It starts out with some default values, and uses the maximum number of enemies.
+	 *  It starts out with some default values, including half the maximum number of enemies.
 	 */
 	public EnemyManager(int x, int y, MineTD g) {
 		spawnPos = new int[] {x, y};
+		enemies = new ArrayList<Enemy>();
+		numEnemies = MAX_ENEMIES/2;
 		startToGoal = new ImuteblePosition[]{ new ImuteblePosition(0, 0),
 											  new ImuteblePosition(1, 2),
 											  new ImuteblePosition(1, 4)};
 		game = g;
-		numEnemies = MAX_ENEMIES;
 		enemyHP = 10;
 		enemySpeed = 2;
 		}
@@ -47,6 +48,8 @@ public class EnemyManager {
 		// Increase difficulty parameters for next wave
 		enemyHP *= 1.5;
 		enemySpeed += 1;
+		if (numEnemies < MAX_ENEMIES)
+			numEnemies++;
 		
 	}
 	public void init(){
