@@ -54,17 +54,25 @@ public class MineTD
 	private OrthographicCamera camera;
 	private InputMultiplexer InMultiplexer;
 	private AssetManager assetManager;
-	private MouseInputAdapter input= new MouseInputAdapter(this);
-	private EnemyManager enemiesManager = new EnemyManager(1, 0, this);
+	private MouseInputAdapter input;
+	private EnemyManager enemiesManager;
 	private GameMap level;
-	private BuildingManager buildingManager = new BuildingManager(this);
-	private UIManager uiManager = new UIManager(this);
+	private BuildingManager buildingManager;
+	private UIManager uiManager;
+	private PlayerStats playerStats;
+	private SpriteBatch guiBatch;
 	private int w, h;
 	@Override
-	public void create() {		
+	public void create() {
+		input = new MouseInputAdapter(this);
 		InMultiplexer = new InputMultiplexer();
 		Gdx.input.setInputProcessor(InMultiplexer);
+		enemiesManager = new EnemyManager(1, 0, this);
+		buildingManager = new BuildingManager(this);
+		uiManager = new UIManager(this);
 		assetManager = new AssetManager();
+		playerStats = new PlayerStats();
+		guiBatch = new SpriteBatch();
 		loadAssets();
 		
 		setupCam();
@@ -81,6 +89,8 @@ public class MineTD
 		buildingManager.init();
 		uiManager.init();
 		camera.translate(new Vector2((float) level.getFinish().getX()-camera.position.x, (float)  level.getFinish().getY()-camera.position.y));
+	
+		
 	}
 
 	private void loadAssets() {
@@ -129,12 +139,15 @@ public class MineTD
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		level.Draw(camera);
-		//level.DrawPathGraph();
+		level.DrawPathGraph();
 		getBatch().begin();
 		enemiesManager.Draw(getBatch());
 		buildingManager.Draw(getBatch());
 		uiManager.Draw();
 		getBatch().end();
+		guiBatch.begin();
+		buildingManager.Draw(guiBatch);
+		guiBatch.end();
 		
 	}
 
