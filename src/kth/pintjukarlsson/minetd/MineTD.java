@@ -58,7 +58,7 @@ public class MineTD
 	private EnemyManager enemiesManager = new EnemyManager(1, 0, this);
 	private GameMap level;
 	private BuildingManager buildingManager = new BuildingManager(this);
-	private UIManager uiManager = new UIManager();
+	private UIManager uiManager = new UIManager(this);
 	private int w, h;
 	@Override
 	public void create() {		
@@ -103,6 +103,7 @@ public class MineTD
 	private void setupCam() {
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
+		//float h = Gdx.graphics.getHeight() - uiManager.getHeight();
 
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, (w / h) * 10, 10);
@@ -141,6 +142,7 @@ public class MineTD
 		camera.update();
 		enemiesManager.Update();
 		buildingManager.Update();
+		uiManager.Update();
 	}
 
 	@Override

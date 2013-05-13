@@ -35,10 +35,14 @@ public class EnemyManager {
 		game = g;
 		enemyHP = 10;
 		enemySpeed = 2;
-		}
+	}
 	
-	// Spawns a new wave of enemies in a square at the default spawn location
-	private void spawnWave() {
+	// Spawns a new wave of enemies in a square at the default spawn location.
+	// (Only spawn a wave if the previous wave is cleared.) 
+	// Returns true if successful. 
+	public boolean spawnWave() {
+		if (enemies.size() != 0)
+			return false;
 		int side = (int)Math.ceil(Math.sqrt(numEnemies)); // side of square
 		for (int i=0; i<numEnemies; i++) {
 			int x = spawnPos[0]+(i%side);
@@ -50,7 +54,7 @@ public class EnemyManager {
 		enemySpeed += 1;
 		if (numEnemies < MAX_ENEMIES)
 			numEnemies++;
-		
+		return true;
 	}
 	public void init(){
 		this.startToGoal =  game.getLevel().getPathStartToFinish();
