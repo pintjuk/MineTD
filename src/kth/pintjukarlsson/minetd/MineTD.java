@@ -158,6 +158,8 @@ public class MineTD
 		enemiesManager.Update();
 		buildingManager.Update();
 		uiManager.Update();
+		if(playerStats.getLives() <=0)
+			throw new YouAreDeadException();
 	}
 
 	@Override
