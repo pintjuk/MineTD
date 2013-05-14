@@ -3,6 +3,7 @@ package kth.pintjukarlsson.minetd;
 import java.util.Random;
 
 import kth.pintjukarlsson.graph.ImuteblePosition;
+import kth.pintjukarlsson.minetd.listeners.MapInteractionListener;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -35,6 +36,8 @@ public class Enemy extends Entity {
 
 	private boolean isDead = false;
 	private static Random rand = new Random(5454);
+	
+	boolean findclosestPoint = true;
 
 	public boolean isDead() {
 		return isDead;
@@ -130,6 +133,23 @@ public class Enemy extends Entity {
 	 */
 	@Override
 	public void Update() {
+		if( findclosestPoint){
+			findclosestPoint =false;
+			float dis= 1000000;
+			int closest = 0;
+			for(int i=0; i<path.length; i++){
+				if(dis>(path[i].manhatanDistance(
+						new ImuteblePosition((int)this.getPos().x, 
+												(int)this.getPos().y))))
+				{
+					dis = (path[i].manhatanDistance(
+							new ImuteblePosition((int)this.getPos().x, 
+									(int)this.getPos().y)));
+					closest = i;
+				}
+			}
+			this.nextGoal = closest;
+		}
 		Vector2 nextTarget = new Vector2((float) path[nextGoal].getX(),
 				(float) path[nextGoal].getY());
 		Vector2 dir = new Vector2(nextTarget);
@@ -194,6 +214,21 @@ public class Enemy extends Entity {
 				regionsExplosion[1][2], regionsExplosion[2][0],
 				regionsExplosion[2][1], regionsExplosion[2][2]);
 		explode.setPlayMode(Animation.LOOP);
+		this.getGame().getInput().setMapInteractionListener(new MapInteractionListener() {
+			
+			@Override
+			public void onTileRM(int x, int y, TileType t) {
+				path = getGame().getLevel().getPathStartToFinish();
+				findclosestPoint = true;
+				
+			}
+			
+			@Override
+			public void onTileAdded(int x, int y, TileType t) {
+				path = getGame().getLevel().getPathStartToFinish();
+				findclosestPoint = true;
+			}
+		});
 	}
 
 	public void takeDamage(float damage) {

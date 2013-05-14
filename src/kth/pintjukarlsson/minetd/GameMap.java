@@ -33,7 +33,8 @@ public class GameMap {
 	private OrthogonalTiledMapRenderer renderer;
 	private PositionGraph graph;
 	private TiledMapTileLayer pathingLayer;
-	private ImuteblePosition span, finish;
+	private ImuteblePosition span, finish; 
+	private ImuteblePosition[] pathGoalToFinish;
 	
 	public OrthogonalTiledMapRenderer getRenderer(){
 		return  renderer;
@@ -122,6 +123,7 @@ public class GameMap {
 		
 		pathingLayer.setCell(x, y, cell);
 		graph.reBuildDibugImg();
+		calcPathStartToFinish();
 		return true;
 	}
 	
@@ -134,6 +136,7 @@ public class GameMap {
 		
 		setGraphTile(x, y, pathingLayer);
 		graph.reBuildDibugImg();
+		calcPathStartToFinish();
 		return t;
 	}
 	
@@ -212,8 +215,13 @@ public class GameMap {
 	public ImuteblePosition[] getPath(ImuteblePosition a, ImuteblePosition b){
 		return Dijkstra.findPath(graph, a, b);
 	}
+	
+	public ImuteblePosition[] calcPathStartToFinish(){
+		 pathGoalToFinish = getPath(this.span, this.finish);
+		return pathGoalToFinish;
+	}
 	public ImuteblePosition[] getPathStartToFinish(){
-		return getPath(this.span, this.finish);
+		return this.pathGoalToFinish;
 	}
 	
 	public void loadAssets(AssetManager assetManager){
@@ -221,6 +229,7 @@ public class GameMap {
 		pathingLayer = (TiledMapTileLayer) map.getLayers().get(2);
 		init();
 		buildGraph();
+		calcPathStartToFinish();
 	}
 	
 	public void resetDebugDraw(){
