@@ -17,6 +17,7 @@ public class MouseInputAdapter extends InputAdapter {
 	private OrthographicCamera camera;
 	private GameMap level;
 	private MineTD game;
+	private PlayerStats pStats;
 	final Vector3 curr = new Vector3();
 	final Vector3 last = new Vector3(-1, -1, -1);
 	final Vector3 delta = new Vector3();
@@ -32,6 +33,7 @@ public class MouseInputAdapter extends InputAdapter {
 	public void init(){
 		this.camera = game.getCamera();
 		this.level = game.getLevel();
+		this.pStats = game.getPlayerStats(); 
 	}
 
 	
@@ -65,20 +67,28 @@ public class MouseInputAdapter extends InputAdapter {
 		int mapx=(int)(m.x);
 		int mapy=(int)(m.y);
 		if(Buttons.RIGHT==button){
-			if(level.spotFree(mapx, mapy)){
+			
+			if(level.spotFree(mapx, mapy)&&pStats.hasSelectedMaterial()){
 				if(level.setTile(TileType.DIRT, mapx,mapy)){
+					TileType t = pStats.popSelected();
 					for(MapInteractionListener i: milisteners){
-						i.onTileAdded(mapx,mapy, TileType.DIRT);
+						i.onTileAdded(mapx,mapy, t);
 					}
 				}
 				
 			}
 			else {
 				//level.removeTile(1, mapx,mapy);
-				TileType t =level.removeTile( mapx,mapy);
-				if(t!=null){
-					for(MapInteractionListener i: milisteners){
-						i.onTileRM(mapx,mapy, t);
+				if(pStats.hasEnergy()){
+					pStats.popEnergy();
+					TileType t =level.removeTile( mapx,mapy);
+					if(t != null){
+						pStats.pushMaterial(t);
+						if(t!=null){
+							for(MapInteractionListener i: milisteners){
+								i.onTileRM(mapx,mapy, t);
+							}
+						}
 					}
 				}
 				

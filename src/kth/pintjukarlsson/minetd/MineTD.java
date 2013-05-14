@@ -51,6 +51,11 @@ public class MineTD
 
 	
 
+	public PlayerStats getPlayerStats() {
+		return playerStats;
+	}
+
+
 	private OrthographicCamera camera;
 	private InputMultiplexer InMultiplexer;
 	private AssetManager assetManager;
@@ -71,7 +76,7 @@ public class MineTD
 		buildingManager = new BuildingManager(this);
 		uiManager = new UIManager(this);
 		assetManager = new AssetManager();
-		playerStats = new PlayerStats();
+		playerStats = new PlayerStats(this);
 		guiBatch = new SpriteBatch();
 		loadAssets();
 		

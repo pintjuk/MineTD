@@ -19,7 +19,9 @@ public class EnemyManager {
 	private int enemyHP;
 	private int enemySpeed;
 	
+	
 	private MineTD game;
+	private PlayerStats pStat;
 	private ImuteblePosition[] startToGoal;
 	/**
 	 *  Creates a new enemy manager that spawns stuff at the location x, y.
@@ -58,6 +60,7 @@ public class EnemyManager {
 	}
 	public void init(){
 		this.startToGoal =  game.getLevel().getPathStartToFinish();
+		this.pStat = game.getPlayerStats();
 		enemies.add(new Enemy(startToGoal[0].getX(), startToGoal[0].getY(), enemyHP, enemySpeed,game,this.startToGoal));
 		enemies.add(new Enemy(startToGoal[4].getX(), startToGoal[4].getY(), enemyHP, enemySpeed,game,this.startToGoal));
 		enemies.add(new Enemy(startToGoal[0].getX(), startToGoal[1].getY(), enemyHP, enemySpeed,game,this.startToGoal));
@@ -74,6 +77,7 @@ public class EnemyManager {
 		for (Enemy e : enemies){
 			e.Update();
 			if(e.isDead()){
+				pStat.pushEnergy();
 				torm.add(e);
 			}
 			if(e.getPos().epsilonEquals(startToGoal[startToGoal.length-1].getVec(),0.4f)){

@@ -33,6 +33,7 @@ public class UIManager implements UIService {
 	private Stage stage;
 	private SpriteBatch batch;
 	private ArrayList<TextButton> buttons;
+	private PlayerStats pStat;
 	private MineTD game;
 	
 	private Label numEnemiesLabel;
@@ -50,6 +51,7 @@ public class UIManager implements UIService {
 	 */
 	@Override
 	public void init() {
+		pStat = game.getPlayerStats();
 		// set stage/table location and size
 		float x = Gdx.graphics.getWidth()-100;
 		float y = 0;
@@ -99,25 +101,49 @@ public class UIManager implements UIService {
 		
 		// Create buttons for each TileType using the "default" TextButtonStyle.
 		for (TileType tt : TileType.values()) {
-			buttons.add(new TextButton(tt.toString(), skin));
-		}
-		for (TextButton button : buttons) {
+			if(tt == TileType.BEDROCK||tt == TileType.LAVA)
+				continue;
+			
+			TextButton button = new TextButton(tt.toString(), skin);
 			table.add(button).width(80);
 			table.row();
-			// Add a Listener to the button. ChangeListener is fired when the button's checked
-			// state changes. For example, when clicked, Button#setChecked() is called,
-			// or via a key press. If the event.cancel() is called, the checked state will
-			// be reverted. ClickListener could have been used, but would only fire when clicked.
-			// Also, canceling a ClickListener event won't revert the checked state.
-			button.addListener(new ChangeListener() {
-				@Override
-				public void changed(ChangeEvent event, Actor actor) {
-					// TODO - select tile type to place + visual indication
-					//System.out.println("Clicked! Is checked: " + button.isChecked());
-					//button.setText("Good job!");
-				}
-			});
+			
+			switch (tt) {
+			case DIRT:
+				button.addListener(new ChangeListener() {
+					
+					@Override
+					public void changed(ChangeEvent event, Actor actor) {
+						
+						pStat.setSelect(0);
+					}
+				});
+				break;
+			case GRAVEL:
+				button.addListener(new ChangeListener() {
+					
+					@Override
+					public void changed(ChangeEvent event, Actor actor) {
+						
+						pStat.setSelect(1);
+					}
+				});
+				break;
+			case STONE:
+				button.addListener(new ChangeListener() {
+					
+					@Override
+					public void changed(ChangeEvent event, Actor actor) {
+						
+						pStat.setSelect(2);
+					}
+				});
+				break;
+			}
+			
+			buttons.add(button);
 		}
+		
 		table.getCell(buttons.get(buttons.size()-1)).expand().top();
 		
 	}
