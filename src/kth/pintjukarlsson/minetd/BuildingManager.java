@@ -25,7 +25,7 @@ public class BuildingManager {
 		input.setMapInteractionListener(new MapInteractionListener() {
 			@Override
 			public void onTileRM(int x, int y, TileType t) {
-				
+				removeAllStatsAtt(x, y);
 					
 			}
 			
@@ -113,6 +113,17 @@ public class BuildingManager {
 				b.addStat(stat);
 			}
 		});
+	}
+	public void removeAllStatsAtt(int x, int y){
+		ArrayList<Building> torm = new ArrayList<>();
+		for (Building b : buildings) {
+			b.removeStatsThahHave(x, y);
+			if(b.stats.size()==0){
+				torm.add(b);
+			}
+		}
+		for(Building b : torm) 
+			buildings.remove(b);
 	}
 	
 	public Building getBuildingWithStatAt(int x, int y){

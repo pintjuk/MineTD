@@ -4,13 +4,14 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public enum TileType {
 	GRAVEL(34,34, 1.2f),
 	DIRT(3,8, 1.1f),
 	BEDROCK(4,3, 15),
 	SAND(4,3, 5),
-	STONE(33,103, 3),
+	STONE(33,103, 1.5f),
+	GOLD(40, 65, 6),
+	IRON(66, 424, 2),
 	LAVA(6,6, 20);
 	private int index;
 	private int buildIndex;

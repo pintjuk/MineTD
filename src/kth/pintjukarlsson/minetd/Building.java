@@ -171,5 +171,16 @@ public class Building extends Entity {
 		stats.add(s);
 		updatePos();
 	}
+
+	public void removeStatsThahHave(int x, int y) {
+		ArrayList<Stat> torm = new ArrayList<>();
+		for(Stat s: stats){
+			if(s.containts(x, y)){
+				torm.add(s);
+			}
+		}
+		for(Stat s: torm)
+			stats.remove(s);
+	}
 	
 }

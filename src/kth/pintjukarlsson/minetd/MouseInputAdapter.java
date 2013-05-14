@@ -61,7 +61,6 @@ public class MouseInputAdapter extends InputAdapter {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		
 		Vector3 m = new Vector3();
 		camera.unproject(m.set(screenX, screenY, 0));
 		int mapx=(int)(m.x);

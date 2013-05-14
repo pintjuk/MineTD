@@ -30,7 +30,7 @@ public class Stat {
 	
 	public boolean containts(int x, int y){
 		return (x==this.x||x==this.x+1)&&
-				(y==this.y||y==this.y+1);
+				(y==this.y||y==this.y-1);
 	}
 	
 	public TileType getFirstTileType(){
