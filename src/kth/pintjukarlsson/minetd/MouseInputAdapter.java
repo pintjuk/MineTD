@@ -23,6 +23,7 @@ public class MouseInputAdapter extends InputAdapter {
 	final Vector3 delta = new Vector3();
 	private boolean leftButtonDown = false;
 	private ArrayList<MapInteractionListener> milisteners = new ArrayList<>();
+	private float errorMsgDuration = 5f;
 	
 	private boolean initilized= false;
 
@@ -75,6 +76,8 @@ public class MouseInputAdapter extends InputAdapter {
 							i.onTileAdded(mapx,mapy, tt);
 						}
 					}
+				} else {
+					MsgPrinter.print("Not enough " + tt.toString().toLowerCase(), errorMsgDuration);
 				}
 			}
 			else {
@@ -90,7 +93,11 @@ public class MouseInputAdapter extends InputAdapter {
 								i.onTileRM(mapx,mapy, t);
 							}
 						}
+					} else {
+						MsgPrinter.print("There is no space", errorMsgDuration);
 					}
+				} else {
+					MsgPrinter.print("Not enough energy", errorMsgDuration);
 				}
 				
 			}
