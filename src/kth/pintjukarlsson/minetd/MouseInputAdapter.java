@@ -92,6 +92,8 @@ public class MouseInputAdapter extends InputAdapter {
 							}
 						}
 					}
+				} else {
+					MsgPrinter.print("Not enough energy", 5f);
 				}
 				
 			}

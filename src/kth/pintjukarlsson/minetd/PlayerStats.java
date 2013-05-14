@@ -25,7 +25,16 @@ public class PlayerStats {
 		
 		resourceMap = new HashMap<>();
 		for (TileType tt : tilesforselect) {
-			resourceMap.put(tt, 3);
+			switch (tt) {
+			case DIRT:
+				resourceMap.put(tt, 3);
+				break;
+			case GRAVEL:
+				resourceMap.put(tt, 5);
+				break;
+			default:
+				resourceMap.put(tt, 0);
+			}
 		}
 	}
 // not sure if this is good enough or there should be tile IDs or something

@@ -10,6 +10,7 @@ public class MsgPrinter {
 
 	private static BitmapFont font = new BitmapFont();
 	private static ArrayList<Message> messages = new ArrayList<>();
+	private final static int MAX_MSGS = 10;
 	
 	private static class Message {
 		public String text;
@@ -32,6 +33,9 @@ public class MsgPrinter {
 	}
 	
 	public static void act(float deltatime) {
+		while (messages.size() > MAX_MSGS) {
+			messages.remove(0);
+		}
 		Iterator<Message> i = messages.iterator();
 		while (i.hasNext()) {
 			Message msg = i.next();
