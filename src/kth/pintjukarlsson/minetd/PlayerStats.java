@@ -15,6 +15,7 @@ public class PlayerStats {
 	private TileType tileSelected = tilesforselect[0];
 	private static TileType[] tilesforselect= new TileType[]{TileType.DIRT, TileType.GRAVEL, TileType.STONE};
 	private MineTD game;
+	private int lives = 40;
 	//private GameMap map;
 	private MouseInputAdapter input;
 	public PlayerStats(MineTD game){
@@ -73,6 +74,10 @@ public class PlayerStats {
 	}
 	public void pushEnergy(){
 		energy++;
+	}
+	
+	public int getLives() {
+		return lives;
 	}
 
 //	public TileType popSelected(){

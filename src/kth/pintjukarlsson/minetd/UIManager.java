@@ -37,6 +37,7 @@ public class UIManager implements UIService {
 	
 	private Label numEnemiesLabel;
 	private TextButton waveButton;
+	private Label livesLabel;
 	
 	private float h; // ui height
 	private float w; // ui width
@@ -83,8 +84,12 @@ public class UIManager implements UIService {
 		table.row();
 		waveButton = new TextButton("Start Wave", skin);
 		skin.setEnabled(waveButton, false);
-		table.add(waveButton).expand().top();
+		table.add(waveButton).top();
 		table.row();
+		livesLabel = new Label("Lives: " + game.getPlayerStats().getLives(), skin);
+		table.add(livesLabel).expand().top();
+		table.row();
+		
 		
 		waveButton.addListener(new ChangeListener() {
 			@Override
@@ -146,6 +151,7 @@ public class UIManager implements UIService {
 		numEnemiesLabel.setText("Enemies: " + numEnemies);
 		if (numEnemies == 0)
 			skin.setEnabled(waveButton, true);
+		livesLabel.setText("Lives: " + game.getPlayerStats().getLives());
 		for (TextButton button : materialButtons) {
 			String tilename = button.getName();
 			int amount = game.getPlayerStats().getAmount(tilename);
