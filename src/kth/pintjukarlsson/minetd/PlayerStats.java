@@ -13,7 +13,7 @@ public class PlayerStats {
 	private int energy = 8;
 	private HashMap<TileType, Integer> resourceMap;
 	private TileType tileSelected = tilesforselect[0];
-	private static TileType[] tilesforselect= new TileType[]{TileType.DIRT, TileType.GRAVEL, TileType.STONE};
+	private static TileType[] tilesforselect= new TileType[]{TileType.DIRT, TileType.GRAVEL, TileType.STONE, TileType.IRON, TileType.GOLD};
 	private MineTD game;
 	private int lives = 40;
 	//private GameMap map;
