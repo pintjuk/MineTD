@@ -54,9 +54,6 @@ public class MineTD
 	}
 	
 
-	public PlayerStats getPlayerStats() {
-		return playerStats;
-	}
 
 
 	private OrthographicCamera camera;

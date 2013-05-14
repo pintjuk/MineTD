@@ -70,10 +70,10 @@ public class MouseInputAdapter extends InputAdapter {
 			if(level.spotFree(mapx, mapy)){
 				TileType tt = game.getPlayerStats().getSelect();
 				if (game.getPlayerStats().getAmount(tt.toString()) > 0) {
-					if(level.setTile(game.getPlayerStats().getSelect(), mapx,mapy)){
+					if(level.setTile(tt, mapx,mapy)){
 						game.getPlayerStats().addAmount(tt.toString(), -1);
 						for(MapInteractionListener i: milisteners){
-							i.onTileAdded(mapx,mapy, game.getPlayerStats().getSelect());
+							i.onTileAdded(mapx,mapy, tt);
 						}
 					}
 				}
@@ -82,11 +82,11 @@ public class MouseInputAdapter extends InputAdapter {
 				//level.removeTile(1, mapx,mapy);
 
 				if(pStats.hasEnergy()){
-					pStats.popEnergy();
 					TileType t =level.removeTile( mapx,mapy);
 					if(t != null){
 						game.getPlayerStats().addAmount(t.toString(), 1);
 						if(t!=null){
+							pStats.popEnergy();
 							for(MapInteractionListener i: milisteners){
 								i.onTileRM(mapx,mapy, t);
 							}

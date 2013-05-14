@@ -22,6 +22,11 @@
     <property name="type" value="stone"/>
    </properties>
   </tile>
+  <tile id="33">
+   <properties>
+    <property name="type" value="gravle"/>
+   </properties>
+  </tile>
   <tile id="39">
    <properties>
     <property name="type" value="gold"/>

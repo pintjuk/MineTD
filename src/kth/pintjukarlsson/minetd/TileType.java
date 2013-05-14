@@ -6,11 +6,11 @@ import java.util.Map;
 
 
 public enum TileType {
-	GRAVEL(2,7, 1.2f),
+	GRAVEL(34,34, 1.2f),
 	DIRT(3,8, 1.1f),
 	BEDROCK(4,3, 15),
 	SAND(4,3, 5),
-	STONE(5,5, 6),
+	STONE(33,103, 3),
 	LAVA(6,6, 20);
 	private int index;
 	private int buildIndex;

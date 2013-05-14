@@ -86,9 +86,9 @@ public class PlayerStats {
 //		resourceCount[selected]--;
 //		return tilesforselect[selected];
 //	}
-	public void Draw(SpriteBatch batch){
-		font.draw(batch, "hej", 10, 10);
-	}
+	//public void Draw(SpriteBatch batch){
+	//	font.draw(batch, "hej", 10, 10);
+	//}
 	
 	/**
 	 * Returns the current amount of the specified TileType.
