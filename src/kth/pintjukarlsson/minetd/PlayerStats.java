@@ -27,10 +27,13 @@ public class PlayerStats {
 		for (TileType tt : tilesforselect) {
 			switch (tt) {
 			case DIRT:
-				resourceMap.put(tt, 3);
+				resourceMap.put(tt, 5);
 				break;
 			case GRAVEL:
-				resourceMap.put(tt, 5);
+				resourceMap.put(tt, 2);
+				break;
+			case STONE:
+				resourceMap.put(tt, 1);
 				break;
 			default:
 				resourceMap.put(tt, 0);
