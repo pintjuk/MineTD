@@ -27,7 +27,7 @@ public class PlayerStats {
 		for (TileType tt : tilesforselect) {
 			switch (tt) {
 			case DIRT:
-				resourceMap.put(tt, 5);
+				resourceMap.put(tt, 50);
 				break;
 			case GRAVEL:
 				resourceMap.put(tt, 2);
@@ -128,5 +128,9 @@ public class PlayerStats {
 	 */
 	public static TileType[] getUsableTiles() {
 		return tilesforselect;
+	}
+	public void reduseLives() {
+		lives--;
+		
 	}
 }

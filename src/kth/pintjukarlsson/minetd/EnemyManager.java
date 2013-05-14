@@ -81,6 +81,7 @@ public class EnemyManager {
 				torm.add(e);
 			}
 			if(e.getPos().epsilonEquals(startToGoal[startToGoal.length-1].getVec(),0.4f)){
+				pStat.reduseLives();
 				torm.add(e);
 			}
 		}

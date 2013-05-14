@@ -53,7 +53,7 @@ public class GameMap {
 	
 	public void DrawPathGraph(){
 		
-		//graph.DibugDraw();
+		graph.DibugDraw();
 		
 	}
 	
@@ -112,7 +112,7 @@ public class GameMap {
 		if (getPath(new ImuteblePosition(x, y), this.finish).length==0)
 			return false;
 		graph.removeAllLinksTo(new ImuteblePosition(x, y));
-		int length = getPathStartToFinish().length;
+		int length = calcPathStartToFinish().length;
 		if(length==0){
 			setGraphTile(x, y, pathingLayer);
 			graph.reBuildDibugImg();
@@ -123,7 +123,7 @@ public class GameMap {
 		
 		pathingLayer.setCell(x, y, cell);
 		graph.reBuildDibugImg();
-		calcPathStartToFinish();
+		updatePothStartToFinish();
 		return true;
 	}
 	
@@ -136,7 +136,7 @@ public class GameMap {
 		
 		setGraphTile(x, y, pathingLayer);
 		graph.reBuildDibugImg();
-		calcPathStartToFinish();
+		updatePothStartToFinish();
 		return t;
 	}
 	
@@ -217,8 +217,10 @@ public class GameMap {
 	}
 	
 	public ImuteblePosition[] calcPathStartToFinish(){
-		 pathGoalToFinish = getPath(this.span, this.finish);
-		return pathGoalToFinish;
+		 return getPath(this.span, this.finish);
+	}
+	public void updatePothStartToFinish(){
+		pathGoalToFinish = calcPathStartToFinish();
 	}
 	public ImuteblePosition[] getPathStartToFinish(){
 		return this.pathGoalToFinish;
@@ -229,7 +231,7 @@ public class GameMap {
 		pathingLayer = (TiledMapTileLayer) map.getLayers().get(2);
 		init();
 		buildGraph();
-		calcPathStartToFinish();
+		updatePothStartToFinish();
 	}
 	
 	public void resetDebugDraw(){

@@ -40,6 +40,7 @@ public class MouseInputAdapter extends InputAdapter {
 	
 	@Override
 	public boolean touchDragged (int x, int y, int pointer) {
+		
 		camera.unproject(curr.set(x, y, 0));
 		if(leftButtonDown){
 			if (!(last.x == -1 && last.y == -1 && last.z == -1)){

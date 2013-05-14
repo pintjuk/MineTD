@@ -218,15 +218,22 @@ public class Enemy extends Entity {
 			
 			@Override
 			public void onTileRM(int x, int y, TileType t) {
-				path = getGame().getLevel().getPathStartToFinish();
-				findclosestPoint = true;
+				ImuteblePosition[] p =getGame().getLevel().getPath(new ImuteblePosition((int)(getPos().x+0.5f), (int)(getPos().y+0.5f)),
+						getGame().getLevel().getFinish());
+				path = p==null?path:p.length<=0?path:p;
+				nextGoal = 0;
+				findclosestPoint = false;
 				
 			}
 			
 			@Override
 			public void onTileAdded(int x, int y, TileType t) {
-				path = getGame().getLevel().getPathStartToFinish();
-				findclosestPoint = true;
+				ImuteblePosition[] p =getGame().getLevel().getPath(new ImuteblePosition((int)(getPos().x+0.5f), (int)(getPos().y+0.5f)),
+						getGame().getLevel().getFinish());
+				path = p==null?path:p.length<=0?path:p;
+				nextGoal = 0;
+				//path = getGame().getLevel().getPathStartToFinish();
+				findclosestPoint = false;
 			}
 		});
 	}
