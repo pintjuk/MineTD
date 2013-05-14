@@ -1,26 +1,33 @@
 package kth.pintjukarlsson.minetd;
 
+import java.util.HashMap;
+
+import kth.pintjukarlsson.minetd.listeners.MapInteractionListener;
+
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 
 public class PlayerStats {
-	// i would really like to put these values together into a map of some sort
-	// to avoid switch blocks and code duplication
-	private int power=0;
-	private int gravel=10;
-	private int dirt=10;
-	private int stone=10;
-	private static TileType[] tilesforselect= new TileType[]{TileType.DIRT, TileType.GRAVEL, TileType.STONE};
-	// -----------------
 	
-	private BitmapFont font;
+	private int energy = 8;
+	private HashMap<TileType, Integer> resourceMap;
 	private TileType tileSelected = tilesforselect[0];
-	public PlayerStats(){
-		font= new BitmapFont();
+	private static TileType[] tilesforselect= new TileType[]{TileType.DIRT, TileType.GRAVEL, TileType.STONE};
+	private MineTD game;
+	//private GameMap map;
+	private MouseInputAdapter input;
+	public PlayerStats(MineTD game){
+		this.game = game;
+		//this.map =this.game.getLevel();
+		input = game.getInput();
+		
+		resourceMap = new HashMap<>();
+		for (TileType tt : tilesforselect) {
+			resourceMap.put(tt, 3);
+		}
 	}
-
-	// not sure if this is good enough or there should be tile IDs or something
+// not sure if this is good enough or there should be tile IDs or something
 	// (just trying to get it to work atm)
 	/**
 	 * Buttons are created from the usable tiles defined in this class. (tilesforselect)
@@ -48,43 +55,55 @@ public class PlayerStats {
 	public TileType getSelect() {
 		return tileSelected;
 	}
-	
-	public TileType popSelected(){
-		return null;
+	/*
+	 * return energy
+	 */
+	public int getEnergy()
+	{
+		return energy;
 	}
+	
+	public boolean hasEnergy(){
+		if(energy<=0)
+			return false;
+		return true;
+	}
+	public void popEnergy(){
+		energy--;
+	}
+	public void pushEnergy(){
+		energy++;
+	}
+
+//	public TileType popSelected(){
+//		if(resourceCount[selected]<=0)
+//			return null;
+//		resourceCount[selected]--;
+//		return tilesforselect[selected];
+//	}
 	public void Draw(SpriteBatch batch){
 		font.draw(batch, "hej", 10, 10);
-		
 	}
 	
 	/**
 	 * Returns the current amount of the specified TileType.
 	 */
 	public int getAmount(String tilename) {
-		switch (tilename) {
-		case "DIRT":
-			return dirt;
-		case "GRAVEL":
-			return gravel;
-		case "STONE":
-			return stone;
-		default:
-			throw new IllegalArgumentException(tilename + " is not a usable tile");
+	for (TileType tt : tilesforselect) {
+		if (tilename.equals(tt.toString())) {
+			return resourceMap.get(tt);
 		}
+	}
+	throw new IllegalArgumentException(tilename + " is not a usable tile");
 	}
 	
 	public void addAmount(String tilename, int amount) {
-		switch(tilename) {
-		case "DIRT":
-			dirt += amount;
-			break;
-		case "GRAVEL":
-			gravel += amount;
-			break;
-		case "STONE":
-			stone += amount;
-			break;
-		}
+		for (TileType tt : tilesforselect) {
+			if (tilename.equals(tt.toString())) {
+				int x = resourceMap.get(tt);
+				resourceMap.put(tt, amount+x);
+			}
+ 		}
 	}
 
 	/**

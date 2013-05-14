@@ -90,7 +90,6 @@ public class Building extends Entity {
 	 */
 	@Override
 	public void Draw(SpriteBatch batch) {
-		//System.out.println(toString()+ ":   "+ getPos());
 		
 		if(fire==null)
 			init();

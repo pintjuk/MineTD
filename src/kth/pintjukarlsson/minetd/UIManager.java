@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 /**
@@ -98,6 +99,7 @@ public class UIManager implements UIService {
 		
 		
 		// Create buttons for each TileType using the "default" TextButtonStyle.
+
 		for (TileType tt : PlayerStats.getUsableTiles()) {
 			//int amount = game.getPlayerStats().getAmount(tt);
 			TextButton button = new TextButton(tt.toString() + "[0]", skin);

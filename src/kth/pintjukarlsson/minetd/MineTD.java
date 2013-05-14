@@ -54,6 +54,11 @@ public class MineTD
 	}
 	
 
+	public PlayerStats getPlayerStats() {
+		return playerStats;
+	}
+
+
 	private OrthographicCamera camera;
 	private InputMultiplexer InMultiplexer;
 	private AssetManager assetManager;
@@ -74,7 +79,7 @@ public class MineTD
 		buildingManager = new BuildingManager(this);
 		uiManager = new UIManager(this);
 		assetManager = new AssetManager();
-		playerStats = new PlayerStats();
+		playerStats = new PlayerStats(this);
 		guiBatch = new SpriteBatch();
 		loadAssets();
 		
@@ -146,11 +151,11 @@ public class MineTD
 		getBatch().begin();
 		enemiesManager.Draw(getBatch());
 		buildingManager.Draw(getBatch());
-		uiManager.Draw();
 		getBatch().end();
-		guiBatch.begin();
-		buildingManager.Draw(guiBatch);
-		guiBatch.end();
+		uiManager.Draw();
+		//guiBatch.begin();
+	//	buildingManager.Draw(guiBatch);
+		//guiBatch.end();
 		
 	}
 

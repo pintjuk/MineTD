@@ -7,9 +7,34 @@
     <property name="type" value="dirt"/>
    </properties>
   </tile>
+  <tile id="5">
+   <properties>
+    <property name="type" value="stonB"/>
+   </properties>
+  </tile>
   <tile id="7">
    <properties>
     <property name="type" value="dirtB"/>
+   </properties>
+  </tile>
+  <tile id="32">
+   <properties>
+    <property name="type" value="stone"/>
+   </properties>
+  </tile>
+  <tile id="39">
+   <properties>
+    <property name="type" value="gold"/>
+   </properties>
+  </tile>
+  <tile id="64">
+   <properties>
+    <property name="type" value="gold"/>
+   </properties>
+  </tile>
+  <tile id="65">
+   <properties>
+    <property name="type" value="oir"/>
    </properties>
   </tile>
   <tile id="80">
@@ -17,9 +42,29 @@
     <property name="type" value="start"/>
    </properties>
   </tile>
+  <tile id="98">
+   <properties>
+    <property name="type" value="dimond"/>
+   </properties>
+  </tile>
+  <tile id="102">
+   <properties>
+    <property name="type" value="stoneB"/>
+   </properties>
+  </tile>
   <tile id="268">
    <properties>
     <property name="type" value="finish"/>
+   </properties>
+  </tile>
+  <tile id="423">
+   <properties>
+    <property name="type " value="metalB"/>
+   </properties>
+  </tile>
+  <tile id="461">
+   <properties>
+    <property name="type" value="lava"/>
    </properties>
   </tile>
  </tileset>
@@ -35,7 +80,7 @@
  </layer>
  <layer name="stuff" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   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
+   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
   </data>
  </layer>
  <layer name="decore" width="100" height="100">
