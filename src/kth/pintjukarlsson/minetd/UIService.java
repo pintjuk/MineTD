@@ -3,7 +3,7 @@ package kth.pintjukarlsson.minetd;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public interface UIService extends ApplicationListener
+public interface UIService
 {
   public boolean needsGL20( );    
   public void init( );

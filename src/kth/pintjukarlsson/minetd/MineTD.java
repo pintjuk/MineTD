@@ -143,11 +143,11 @@ public class MineTD
 		getBatch().begin();
 		enemiesManager.Draw(getBatch());
 		buildingManager.Draw(getBatch());
-		uiManager.Draw();
 		getBatch().end();
-		guiBatch.begin();
-		buildingManager.Draw(guiBatch);
-		guiBatch.end();
+		uiManager.Draw();
+		//guiBatch.begin();
+	//	buildingManager.Draw(guiBatch);
+		//guiBatch.end();
 		
 	}
 
