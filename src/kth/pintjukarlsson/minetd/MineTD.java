@@ -52,12 +52,6 @@ public class MineTD
 	public PlayerStats getPlayerStats() {
 		return playerStats;
 	}
-	
-
-	public PlayerStats getPlayerStats() {
-		return playerStats;
-	}
-
 
 	private OrthographicCamera camera;
 	private InputMultiplexer InMultiplexer;

@@ -38,6 +38,7 @@ public class UIManager implements UIService {
 	private Label numEnemiesLabel;
 	private TextButton waveButton;
 	private Label livesLabel;
+	private Label energyLabel;
 	
 	private float h; // ui height
 	private float w; // ui width
@@ -77,20 +78,15 @@ public class UIManager implements UIService {
 		
 		// Create wave info / controls
 		final Label waveLabel = new Label("Wave: " + wave, skin);
-		table.add(waveLabel).top();
-		table.row();
+		//table.add(waveLabel).top();
+		//table.row();
 		numEnemiesLabel = new Label("Enemies: " + game.getEnemiesManager().getEnemies().size(), skin);
 		table.add(numEnemiesLabel).top();
 		table.row();
 		waveButton = new TextButton("Start Wave", skin);
 		skin.setEnabled(waveButton, false);
-		table.add(waveButton).top();
-		table.row();
-		livesLabel = new Label("Lives: " + game.getPlayerStats().getLives(), skin);
-		table.add(livesLabel).expand().top();
-		table.row();
-		
-		
+		//table.add(waveButton).top();
+		//table.row();
 		waveButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
@@ -101,10 +97,15 @@ public class UIManager implements UIService {
 				}
 			}
 		});
+		livesLabel = new Label("Lives: " + game.getPlayerStats().getLives(), skin);
+		table.add(livesLabel).expand().top();
+		table.row();
 		
-		
-		// Create buttons for each TileType using the "default" TextButtonStyle.
+		energyLabel = new Label("Energy: " + game.getPlayerStats().getEnergy(), skin);
+		table.add(energyLabel).top();
+		table.row();
 
+		// Create buttons for each TileType using the "default" TextButtonStyle.
 		for (TileType tt : PlayerStats.getUsableTiles()) {
 			//int amount = game.getPlayerStats().getAmount(tt);
 			TextButton button = new TextButton(tt.toString() + "[0]", skin);
@@ -152,6 +153,7 @@ public class UIManager implements UIService {
 		if (numEnemies == 0)
 			skin.setEnabled(waveButton, true);
 		livesLabel.setText("Lives: " + game.getPlayerStats().getLives());
+		energyLabel.setText("Energy: " + game.getPlayerStats().getEnergy());
 		for (TextButton button : materialButtons) {
 			String tilename = button.getName();
 			int amount = game.getPlayerStats().getAmount(tilename);
