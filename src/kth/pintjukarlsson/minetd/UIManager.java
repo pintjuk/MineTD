@@ -165,6 +165,8 @@ public class UIManager implements UIService {
 	 */
 	@Override
 	public void Draw() {
+		MsgPrinter.act(Gdx.graphics.getDeltaTime());
+		MsgPrinter.Draw(batch);
 		stage.act(Gdx.graphics.getDeltaTime());
 		stage.draw();
 		Table.drawDebug(stage); // This is optional, but enables debug lines for tables.

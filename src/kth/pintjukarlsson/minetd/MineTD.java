@@ -91,8 +91,9 @@ public class MineTD
 		buildingManager.init();
 		uiManager.init();
 		camera.translate(new Vector2((float) level.getFinish().getX()-camera.position.x, (float)  level.getFinish().getY()-camera.position.y));
-	
 		
+		MsgPrinter.print("Welcome to MineTD!", 2f);
+		MsgPrinter.print("Good luck!", 5f);
 	}
 
 	private void loadAssets() {
