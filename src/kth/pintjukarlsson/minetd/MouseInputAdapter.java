@@ -66,17 +66,21 @@ public class MouseInputAdapter extends InputAdapter {
 		int mapy=(int)(m.y);
 		if(Buttons.RIGHT==button){
 			if(level.spotFree(mapx, mapy)){
-				if(level.setTile(TileType.DIRT, mapx,mapy)){
-					for(MapInteractionListener i: milisteners){
-						i.onTileAdded(mapx,mapy, TileType.DIRT);
+				TileType tt = game.getPlayerStats().getSelect();
+				if (game.getPlayerStats().getAmount(tt.toString()) > 0) {
+					if(level.setTile(game.getPlayerStats().getSelect(), mapx,mapy)){
+						game.getPlayerStats().addAmount(tt.toString(), -1);
+						for(MapInteractionListener i: milisteners){
+							i.onTileAdded(mapx,mapy, game.getPlayerStats().getSelect());
+						}
 					}
 				}
-				
 			}
 			else {
 				//level.removeTile(1, mapx,mapy);
 				TileType t =level.removeTile( mapx,mapy);
 				if(t!=null){
+					game.getPlayerStats().addAmount(t.toString(), 1);
 					for(MapInteractionListener i: milisteners){
 						i.onTileRM(mapx,mapy, t);
 					}
@@ -99,6 +103,4 @@ public class MouseInputAdapter extends InputAdapter {
 	public void setMapInteractionListener(MapInteractionListener m){
 		milisteners.add(m);
 	}
-	
-	///////////////////////////////
 }

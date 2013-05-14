@@ -31,7 +31,7 @@ public class UIManager implements UIService {
 	private Skin skin;
 	private Stage stage;
 	private SpriteBatch batch;
-	private ArrayList<TextButton> buttons;
+	private ArrayList<TextButton> materialButtons;
 	private MineTD game;
 	
 	private Label numEnemiesLabel;
@@ -50,16 +50,17 @@ public class UIManager implements UIService {
 	@Override
 	public void init() {
 		// set stage/table location and size
-		float x = Gdx.graphics.getWidth()-100;
-		float y = 0;
-		w = 100;
+		w = 120;
 		h = Gdx.graphics.getHeight();
+		
+		float x = Gdx.graphics.getWidth()-w;
+		float y = 0;
 
 		// initialize fields
 		wave = 1;
 		batch = new SpriteBatch();
 		stage = new Stage(w, h, true, batch);
-		buttons = new ArrayList<>();
+		materialButtons = new ArrayList<>();
 		((InputMultiplexer)Gdx.input.getInputProcessor()).addProcessor(stage);
 		
 		// A skin can be loaded via JSON or defined programmatically, either is fine. Using a skin is optional but strongly
@@ -97,11 +98,15 @@ public class UIManager implements UIService {
 		
 		
 		// Create buttons for each TileType using the "default" TextButtonStyle.
-		for (TileType tt : TileType.values()) {
-			buttons.add(new TextButton(tt.toString(), skin));
+		for (TileType tt : PlayerStats.getUsableTiles()) {
+			//int amount = game.getPlayerStats().getAmount(tt);
+			TextButton button = new TextButton(tt.toString() + "[0]", skin);
+			button.setName(tt.toString());
+			materialButtons.add(button);
 		}
-		for (TextButton button : buttons) {
-			table.add(button).width(80);
+		skin.setEnabled(materialButtons.get(0), false);
+		for (final TextButton button : materialButtons) {
+			table.add(button).width(100);
 			table.row();
 			// Add a Listener to the button. ChangeListener is fired when the button's checked
 			// state changes. For example, when clicked, Button#setChecked() is called,
@@ -112,12 +117,17 @@ public class UIManager implements UIService {
 				@Override
 				public void changed(ChangeEvent event, Actor actor) {
 					// TODO - select tile type to place + visual indication
+					for (final TextButton button : materialButtons) {
+						skin.setEnabled(button,  true);
+					}
+					skin.setEnabled(button,  false);
+					game.getPlayerStats().setSelect(button.getName());
 					//System.out.println("Clicked! Is checked: " + button.isChecked());
 					//button.setText("Good job!");
 				}
 			});
 		}
-		table.getCell(buttons.get(buttons.size()-1)).expand().top();
+		table.getCell(materialButtons.get(materialButtons.size()-1)).expand().top();
 		
 	}
 	
@@ -134,14 +144,18 @@ public class UIManager implements UIService {
 		numEnemiesLabel.setText("Enemies: " + numEnemies);
 		if (numEnemies == 0)
 			skin.setEnabled(waveButton, true);
-		
-		stage.act(Gdx.graphics.getDeltaTime());
+		for (TextButton button : materialButtons) {
+			String tilename = button.getName();
+			int amount = game.getPlayerStats().getAmount(tilename);
+			button.setText(tilename + "[" + amount + "]");
+		}
 	}
 	/**
 	 * {@inheritDoc UIService}
 	 */
 	@Override
 	public void Draw() {
+		stage.act(Gdx.graphics.getDeltaTime());
 		stage.draw();
 		Table.drawDebug(stage); // This is optional, but enables debug lines for tables.
 	}

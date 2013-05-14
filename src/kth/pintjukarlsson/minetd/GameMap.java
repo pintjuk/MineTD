@@ -52,7 +52,7 @@ public class GameMap {
 	
 	public void DrawPathGraph(){
 		
-		graph.DibugDraw();
+		//graph.DibugDraw();
 		
 	}
 	

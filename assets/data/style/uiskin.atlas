@@ -65,6 +65,15 @@ default-round
   orig: 12, 20
   offset: 0, 0
   index: -1
+default-disabled
+  rotate: false
+  xy: 99, 29
+  size: 12, 20
+  split: 5, 5, 5, 4
+  pad: 4, 4, 1, 1
+  orig: 12, 20
+  offset: 0, 0
+  index: -1
 check-off
   rotate: false
   xy: 11, 5
