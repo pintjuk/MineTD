@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -63,6 +64,7 @@ public class MineTD
 	private UIManager uiManager;
 	private PlayerStats playerStats;
 	private SpriteBatch guiBatch;
+	private Music bgMusic;
 	private int w, h;
 	@Override
 	public void create() {
@@ -91,6 +93,12 @@ public class MineTD
 		buildingManager.init();
 		uiManager.init();
 		camera.translate(new Vector2((float) level.getFinish().getX()-camera.position.x, (float)  level.getFinish().getY()-camera.position.y));
+		
+		bgMusic = Gdx.audio.newMusic(Gdx.files.internal("data/bgmusic.mp3"));
+		bgMusic.setVolume(0.5f);
+		bgMusic.setLooping(true);
+		bgMusic.play();
+		
 		
 		MsgPrinter.print("Welcome to MineTD!", 2f);
 		MsgPrinter.print("Good luck!", 5f);
