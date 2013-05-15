@@ -63,7 +63,7 @@ public class MineTD
 		loadAssets();
 		setupCam();
 		
-		// Initialize map.
+		// Initialize map and interface.
 		level = new GameMap();
 		level.loadAssets(assetManager);
 		level.resetDebugDraw();
@@ -158,8 +158,8 @@ public class MineTD
 		getBatch().begin();
 		enemyManager.Draw(getBatch());
 		buildingManager.Draw(getBatch());
-		uiManager.Draw(getBatch());
 		getBatch().end();
+		uiManager.Draw();
 	}
 
 	/**
