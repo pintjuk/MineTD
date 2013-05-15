@@ -1,6 +1,7 @@
 package kth.pintjukarlsson.minetd;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.crypto.Cipher;
 
@@ -9,6 +10,7 @@ import kth.pintjukarlsson.graph.Dijkstra;
 import kth.pintjukarlsson.graph.ImuteblePosition;
 import kth.pintjukarlsson.graph.PositionGraph;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -28,6 +30,8 @@ public class GameMap {
 	public ImuteblePosition getFinish() {
 		return finish;
 	}
+	
+	private HashMap<ImuteblePosition, Float> activeLavaBricks= new HashMap<>();
 
 	private TiledMap map;
 	private OrthogonalTiledMapRenderer renderer;
@@ -47,10 +51,43 @@ public class GameMap {
 	}
 	
 	public void Draw(OrthographicCamera camera){
+		ArrayList<ImuteblePosition> torm= new ArrayList<ImuteblePosition>();
+		for(ImuteblePosition t: activeLavaBricks.keySet()){
+			activeLavaBricks.put(t, activeLavaBricks.get(t)-Gdx.graphics.getDeltaTime());
+			if (activeLavaBricks.get(t)<=0){
+				torm.add(t);
+			}
+		}
+		for(ImuteblePosition t: torm){
+			floawLava(t);
+			Cell c = new Cell();
+			c.setTile(map.getTileSets().getTile(462));
+			pathingLayer.setCell(t.getX(), t.getY(), c);
+			activeLavaBricks.remove(t);
+		}
 		renderer.setView(camera);
 		renderer.render();
 	}
 	
+	private void floawLava(ImuteblePosition t) {
+		int x = t.getX();
+		int y= t.getY();
+		int h=pathingLayer.getHeight();
+		int w= pathingLayer.getWidth();
+		
+		if(this.pathingLayer.getCell(x+1, y)==null &&x<w){
+			this.activeLavaBricks.put(new ImuteblePosition(x+1, y), 0.8f);
+		}
+		if(this.pathingLayer.getCell(x-1, y)==null&&x>0)
+			this.activeLavaBricks.put(new ImuteblePosition(x-1, y), 0.8f);
+			
+		if(this.pathingLayer.getCell(x, y+1)==null&&y<h)
+			this.activeLavaBricks.put(new ImuteblePosition(x, y+1), 0.8f);
+			
+		if(this.pathingLayer.getCell(x, y-1)==null&&y>0)
+			this.activeLavaBricks.put(new ImuteblePosition(x, y-1), 0.8f);
+			
+	}
 	public void DrawPathGraph(){
 		
 		graph.DibugDraw();
@@ -137,10 +174,33 @@ public class GameMap {
 		setGraphTile(x, y, pathingLayer);
 		graph.reBuildDibugImg();
 		updatePothStartToFinish();
+		
+		handleNighboreLava(x,y);
 		return t;
 	}
 	
 	
+	private void handleNighboreLava(int x, int y) {
+		int h=this.pathingLayer.getHeight();
+		int w= this.pathingLayer.getWidth();
+		
+	
+		
+		if(this.pathingLayer.getCell(x+1, y)!=null &&x<w)
+			if(pathingLayer.getCell(x+1, y).getTile().getId() ==462)
+				this.activeLavaBricks.put(new ImuteblePosition(x+1, y), 0.8f);
+		if(this.pathingLayer.getCell(x-1, y)!=null&&x>0)
+			if(pathingLayer.getCell(x-1, y).getTile().getId() ==462)
+				this.activeLavaBricks.put(new ImuteblePosition(x-1, y), 0.8f);
+		if(this.pathingLayer.getCell(x, y+1)!=null&&y<h)
+			if(pathingLayer.getCell(x, y+1).getTile().getId() ==462)
+				this.activeLavaBricks.put(new ImuteblePosition(x, y+1), 0.8f);
+		if(this.pathingLayer.getCell(x, y-1)!=null&&y>0)
+			if(pathingLayer.getCell(x, y-1).getTile().getId() ==462)
+				this.activeLavaBricks.put(new ImuteblePosition(x, y-1), 0.8f);
+				
+		
+	}
 	private boolean hasNullNighbour(int x, int y) {
 		int h=this.pathingLayer.getHeight();
 		int w= this.pathingLayer.getWidth();

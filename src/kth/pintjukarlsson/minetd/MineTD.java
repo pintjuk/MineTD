@@ -142,7 +142,7 @@ public class MineTD
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		level.Draw(camera);
-		level.DrawPathGraph();
+		//level.DrawPathGraph();
 		getBatch().begin();
 		enemiesManager.Draw(getBatch());
 		buildingManager.Draw(getBatch());

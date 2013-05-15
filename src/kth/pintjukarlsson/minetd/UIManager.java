@@ -90,11 +90,11 @@ public class UIManager implements UIService {
 		waveButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				if (game.getEnemiesManager().spawnWave()) {
+			/*	if (game.getEnemiesManager().spawnWave()) {
 					wave++;
 					waveLabel.setText("Wave: " + wave);
 					skin.setEnabled(waveButton, false);
-				}
+				}*/
 			}
 		});
 		livesLabel = new Label("Lives: " + game.getPlayerStats().getLives(), skin);

@@ -81,7 +81,7 @@ public class Building extends Entity {
 				if (new Rectangle(e.getPos().x, e.getPos().y, 1, 1).contains(
 						b.pos.x, b.pos.y)) {
 					e.takeDamage(this.getDamage());
-					e.setPos(e.getPos().sub(b.dir.nor().scl(-1)));
+					e.setPos(e.getPos().sub(b.dir.nor().scl(-0.3f)));
 					torm.add(b);
 				}
 			}

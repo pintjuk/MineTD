@@ -1,9 +1,11 @@
 package kth.pintjukarlsson.minetd;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import kth.pintjukarlsson.graph.ImuteblePosition;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.Map;
 import com.badlogic.gdx.math.Vector2;
@@ -18,11 +20,21 @@ public class EnemyManager {
 	private int numEnemies;
 	private int enemyHP;
 	private int enemySpeed;
-	
+	private int hordCount=0;
+	private float timeToNextEnemy = 1;
+	private float elpesdtimeToNextEenemy=0;
+	private float timeToNext=1;
+	private int hordEnemyCount = 0;
+	private int hordEnemies = 3;
+	private float timeToNextHord = 6;
+	private float elepcedTimebetwineHords = 0;
 	
 	private MineTD game;
 	private PlayerStats pStat;
 	private ImuteblePosition[] startToGoal;
+	private Random rand = new Random(545454545);
+	private boolean timeout;
+	private boolean runTimoutCloc; 
 	/**
 	 *  Creates a new enemy manager that spawns stuff at the location x, y.
 	 *  It starts out with some default values, including half the maximum number of enemies.
@@ -42,7 +54,7 @@ public class EnemyManager {
 	// Spawns a new wave of enemies in a square at the default spawn location.
 	// (Only spawn a wave if the previous wave is cleared.) 
 	// Returns true if successful. 
-	public boolean spawnWave() {
+	/*public boolean spawnWave() {
 		if (enemies.size() != 0)
 			return false;
 		int side = (int)Math.ceil(Math.sqrt(numEnemies)); // side of square
@@ -57,18 +69,45 @@ public class EnemyManager {
 		if (numEnemies < MAX_ENEMIES)
 			numEnemies++;
 		return true;
+	}*/
+	
+	
+	
+	private boolean spawn() {
+		if(!timeout){
+			elpesdtimeToNextEenemy+=Gdx.graphics.getDeltaTime();
+		if(elpesdtimeToNextEenemy>timeToNext)
+		{
+			hordEnemyCount++;
+			enemies.add(new Enemy(startToGoal[0].getX(), startToGoal[0].getY(), enemyHP, enemySpeed,game,this.startToGoal));
+			elpesdtimeToNextEenemy=0;
+			timeToNextEnemy = rand.nextInt(2)+0.1f;
+			if(hordEnemyCount>=hordEnemies){
+				hordEnemyCount=0;
+				hordCount++;
+				hordEnemies = rand.nextInt(hordCount+10)+3;
+				timeout = true;
+				runTimoutCloc =false;
+			}
+		}
+		}else{
+			if(runTimoutCloc)
+				elepcedTimebetwineHords+=Gdx.graphics.getDeltaTime();
+			if(elepcedTimebetwineHords>= timeToNextHord){
+				elepcedTimebetwineHords=0;
+				timeout=false;
+				MsgPrinter.print("Enemies inbound", 1);
+			}
+		}
+		if(enemies.size()==0)
+			runTimoutCloc = true;
+		
+		return true;
 	}
 	public void init(){
 		this.startToGoal =  game.getLevel().getPathStartToFinish();
 		this.pStat = game.getPlayerStats();
-		enemies.add(new Enemy(startToGoal[0].getX(), startToGoal[0].getY(), enemyHP, enemySpeed,game,this.startToGoal));
-		enemies.add(new Enemy(startToGoal[4].getX(), startToGoal[4].getY(), enemyHP, enemySpeed,game,this.startToGoal));
-		enemies.add(new Enemy(startToGoal[0].getX(), startToGoal[1].getY(), enemyHP, enemySpeed,game,this.startToGoal));
-		enemies.add(new Enemy(startToGoal[4].getX(), startToGoal[2].getY(), enemyHP, enemySpeed,game,this.startToGoal));
-		enemies.add(new Enemy(startToGoal[0].getX(), startToGoal[6].getY(), enemyHP, enemySpeed,game,this.startToGoal));
-		enemies.add(new Enemy(startToGoal[4].getX(), startToGoal[9].getY(), enemyHP, enemySpeed,game,this.startToGoal));
-		enemies.add(new Enemy(startToGoal[0].getX(), startToGoal[12].getY(), enemyHP, enemySpeed,game,this.startToGoal));
-		enemies.add(new Enemy(startToGoal[4].getX(), startToGoal[7].getY(), enemyHP, enemySpeed,game,this.startToGoal));
+		
 		
 	}
 	// Runs the Update() method for each existing enemy
@@ -87,6 +126,8 @@ public class EnemyManager {
 		}
 		for (Enemy e : torm)
 			enemies.remove(e);
+		
+		spawn();
 	}
 	// Runs the Draw() method for each existing enemy
 	public void Draw(SpriteBatch batch) {
