@@ -214,6 +214,11 @@ public class Enemy extends Entity {
 				regionsExplosion[1][2], regionsExplosion[2][0],
 				regionsExplosion[2][1], regionsExplosion[2][2]);
 		explode.setPlayMode(Animation.LOOP);
+		ImuteblePosition[] p =getGame().getLevel().getPath(new ImuteblePosition((int)(getPos().x+0.5f), (int)(getPos().y+0.5f)),
+				getGame().getLevel().getFinish());
+		path = p==null?path:p.length<=0?path:p;
+		nextGoal = 0;
+		findclosestPoint = false;
 		this.getGame().getInput().setMapInteractionListener(new MapInteractionListener() {
 			
 			@Override

@@ -50,7 +50,8 @@ public class MsgPrinter {
 		float y = Gdx.graphics.getHeight()-5;
 		for (Message msg : messages) {
 			float alpha = Math.abs(-1 + msg.elapsed/msg.duration);
-			font.setColor(0.0f, 0.0f, 1.0f, alpha);
+			float alpha2 = (float)(Math.log((alpha*1000+1))/Math.log(1000));
+			font.setColor(0.0f, 0.0f, 1.0f, alpha2);
 			batch.begin();
 			font.draw(batch, msg.text, x, y);
 			batch.end();

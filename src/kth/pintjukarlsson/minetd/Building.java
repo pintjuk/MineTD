@@ -25,7 +25,7 @@ public class Building extends Entity {
 	ArrayList<Bullet> bullets=new ArrayList<>();
 	// Creates a new Building object at x, y
 	final private float defoultFireRate= 1;
-	final private int defoultRange= 4;
+	final private int defoultRange= 3;
 	final private float defoultDamage=1;
 	private static Animation fire;
 	private static Texture firetile;
@@ -152,6 +152,10 @@ public class Building extends Entity {
 	
 	public float getDamage(){
 		return defoultDamage*getGetCombinedPowerOfAllStatsOfType(TileType.IRON);
+	}
+	
+	public float getBulletSpeed(){
+		return 20*getGetCombinedPowerOfAllStatsOfType(TileType.GRAVEL);
 	}
 	
 	public float getGetCombinedPowerOfAllStatsOfType(TileType t){

@@ -47,7 +47,7 @@ public class EnemyManager {
 											  new ImuteblePosition(1, 2),
 											  new ImuteblePosition(1, 4)};
 		game = g;
-		enemyHP = 10;
+		enemyHP = 12;
 		enemySpeed = 2;
 	}
 	
@@ -79,7 +79,7 @@ public class EnemyManager {
 		if(elpesdtimeToNextEenemy>timeToNext)
 		{
 			hordEnemyCount++;
-			enemies.add(new Enemy(startToGoal[0].getX(), startToGoal[0].getY(), enemyHP, enemySpeed,game,this.startToGoal));
+			enemies.add(new Enemy(startToGoal[0].getX(), startToGoal[0].getY(), (int) (enemyHP+rand.nextInt(hordCount+1)+Math.log(hordCount)), (int)(this.enemySpeed+((float)rand.nextInt(hordCount+1))/10f),game,this.startToGoal));
 			elpesdtimeToNextEenemy=0;
 			timeToNextEnemy = rand.nextInt(2)+0.1f;
 			if(hordEnemyCount>=hordEnemies){
@@ -96,7 +96,7 @@ public class EnemyManager {
 			if(elepcedTimebetwineHords>= timeToNextHord){
 				elepcedTimebetwineHords=0;
 				timeout=false;
-				MsgPrinter.print("Enemies inbound", 1);
+				MsgPrinter.print("Enemies inbound", 4);
 			}
 		}
 		if(enemies.size()==0)
