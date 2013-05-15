@@ -32,7 +32,7 @@ public class UIManager implements UIService {
 	
 	private float h; // ui height
 	private float w; // ui width
-	private int wave; // counter for enemy waves
+	//private int wave; // counter for enemy waves
 	
 	public UIManager(MineTD game) {
 		this.game = game;
@@ -50,7 +50,7 @@ public class UIManager implements UIService {
 		float y = 0;
 
 		// initialize fields
-		wave = 1;
+		//wave = 1;
 		batch = new SpriteBatch();
 		stage = new Stage(w, h, true, batch);
 		materialButtons = new ArrayList<>();
