@@ -95,13 +95,18 @@ public class MineTD
 		MsgPrinter.print("Welcome to MineTD!", 2f);
 		MsgPrinter.print("Good luck!", 5f);
 		MsgPrinter.print("", 5f);
-		MsgPrinter.print("Build turrets by costracting squere units of 2x2 elements to defend the cacke!", 30f);
+		MsgPrinter.print("Build turrets by costracting squere units of 2x2 elements to defend the cacke agenst the ENEMY!", 30f);
 		MsgPrinter.print("Overlaping squer units will be part and bost the same turret.", 30f);
-		MsgPrinter.print("The upper left element of every squer will determen what stat will boosted", 30f);
-		MsgPrinter.print("and the type of every other element in a squer will determin the power of the boost", 30f);
+		MsgPrinter.print("The upper left element of every squer will determen what stat will be boosted;", 30f);
+		MsgPrinter.print("and the type of every other element in a squer will determin the power of the boost.", 30f);
 		MsgPrinter.print("", 30f);
 		MsgPrinter.print("DIRT: makes minial tower with no busts. GRAVLE: boostes bullet speed. ", 30f);
 		MsgPrinter.print(" STONE: boostes fire rate. IRON: boosts Damag. GOLD: bosts Range", 30f);
+		MsgPrinter.print("", 30f);
+		MsgPrinter.print("Use right muse button to build and mine, use the gui to select material for bulding.", 30f);
+		MsgPrinter.print("Hold down left mous button and drag to look around the map.", 30f);
+		MsgPrinter.print("", 30f);
+		MsgPrinter.print("Dont die, KILL THE ENEMY!", 30f);
 		 
 	}
 
