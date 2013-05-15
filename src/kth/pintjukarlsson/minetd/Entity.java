@@ -1,11 +1,15 @@
 package kth.pintjukarlsson.minetd;
 
-import kth.pintjukarlsson.graph.ImuteblePosition;
+import kth.pintjukarlsson.graph.ImmutablePosition;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-	
+
+/**
+ * Superclass for units (enemies) and buildings.
+ *
+ */
 public abstract class Entity {
 	
 	private Vector2 pos;

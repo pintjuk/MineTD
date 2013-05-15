@@ -3,11 +3,11 @@ package kth.pintjukarlsson.graph;
 import com.badlogic.gdx.math.Vector2;
 import com.sun.jndi.url.iiopname.iiopnameURLContextFactory;
 
-public class ImuteblePosition {
+public class ImmutablePosition {
 	private int x;
 	private int y;
 	private int hash;
-	public ImuteblePosition(int x, int y){
+	public ImmutablePosition(int x, int y){
 		this.x = x;
 		this.y=y;
 		this.hash = x+y*10000;
@@ -33,9 +33,9 @@ public class ImuteblePosition {
 
 	@Override
 	public boolean equals(Object obj) {
-		if(!obj.getClass().equals(ImuteblePosition.class))
+		if(!obj.getClass().equals(ImmutablePosition.class))
 			return false;
-		ImuteblePosition i = (ImuteblePosition)obj;
+		ImmutablePosition i = (ImmutablePosition)obj;
 		if(x!= i.x)
 			return false;
 		if(y!=i.y)
@@ -43,19 +43,19 @@ public class ImuteblePosition {
 		return true;
 	}
 	
-	public float distance(ImuteblePosition i){
+	public float distance(ImmutablePosition i){
 		float dx = this.getX()-i.getX();
 		float dy = this.getY()-i.getY();
 		return (float)Math.sqrt( (double)dx*dx+dy*dy);
 	}
 	
-	public float distanceSq(ImuteblePosition i){
+	public float distanceSq(ImmutablePosition i){
 		float dx = this.getX()-i.getX();
 		float dy = this.getY()-i.getY();
 		return dx*dx+dy*dy;
 	}
 	
-	public float manhatanDistance(ImuteblePosition i){
+	public float manhatanDistance(ImmutablePosition i){
 		float dx = this.getX()>i.getX()?this.getX()-i.getX():i.getX()-this.getX();
 		float dy = this.getY()>i.getY()?this.getY()-i.getY():i.getY()-this.getY();
 		return dx+dy;

@@ -23,6 +23,13 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+/**
+ * Called by the Main class for a given platform.
+ * Handles everything that goes on within the game.
+ * 
+ * @author Daniil Pintjuk
+ * @author Markus Karlsson
+ */
 public class MineTD 
 	extends Game
 {
@@ -36,6 +43,11 @@ public class MineTD
 	private UIManager uiManager;
 	private PlayerStats playerStats;
 	private Music bgMusic;
+	private float w, h;
+	
+	/**
+	 * Creates a new game application.
+	 */
 	@Override
 	public void create() {
 		// Create field objects.
@@ -110,9 +122,8 @@ public class MineTD
 	 * Sets up the camera to fill the game window.
 	 */
 	private void setupCam() {
-		float w = Gdx.graphics.getWidth();
-		float h = Gdx.graphics.getHeight();
-		//float h = Gdx.graphics.getHeight() - uiManager.getHeight();
+		w = Gdx.graphics.getWidth();
+		h = Gdx.graphics.getHeight();
 
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, (w / h) * 10, 10);
@@ -120,14 +131,17 @@ public class MineTD
 		camera.update();
 	}
 
+	/**
+	 * Dispose of assets.
+	 */
 	@Override
 	public void dispose() {
-		assetManager.dispose();
-		
+		assetManager.dispose();	
 	}
 	
 	/**
-	 * yes it is obvious
+	 * Updates the game state, clears the screen
+	 * and renders everything that goes on within the game. 
 	 */
 	@Override
 	public void render() {	
@@ -140,13 +154,17 @@ public class MineTD
 		level.Draw(camera);
 		//level.DrawPathGraph(); // Debug graph for map + unit pathing.
 		
+		// Sending Draw jobs to our SpriteBatch.
 		getBatch().begin();
 		enemyManager.Draw(getBatch());
 		buildingManager.Draw(getBatch());
-		uiManager.Draw();
+		uiManager.Draw(getBatch());
 		getBatch().end();
 	}
 
+	/**
+	 * Updates the game state.
+	 */
 	private void updateGame() {
 		camera.update();
 		enemyManager.Update();
@@ -169,13 +187,11 @@ public class MineTD
 	public void resume() {
 	}
 	
+	// Various get methods
 	public OrthographicCamera getCamera() {
 		return camera;
 	}
 
-	/**
-	 * Returns the EnemyManager.
-	 */
 	public EnemyManager getEnemiesManager() {
 		return enemyManager;
 	}
@@ -184,7 +200,7 @@ public class MineTD
 	  return level.getRenderer().getSpriteBatch();
 	}
 
-	public InputMultiplexer getInMultiplexer() {
+	public InputMultiplexer getInputMultiplexer() {
 		return inputMultiplexer;
 	}
 

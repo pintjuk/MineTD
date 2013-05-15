@@ -2,7 +2,7 @@ package kth.pintjukarlsson.minetd;
 
 import java.util.Random;
 
-import kth.pintjukarlsson.graph.ImuteblePosition;
+import kth.pintjukarlsson.graph.ImmutablePosition;
 import kth.pintjukarlsson.minetd.listeners.MapInteractionListener;
 
 import com.badlogic.gdx.Gdx;
@@ -17,12 +17,12 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Enemy extends Entity {
 
-	private int hp;
+	private float hp;
 	private int maxhp;
 
 	private int speed;
 	private AssetManager assetManager;
-	private ImuteblePosition[] path;
+	private ImmutablePosition[] path;
 	private int nextGoal = 0;
 	private Animation walk;
 	private Animation explode;
@@ -39,17 +39,12 @@ public class Enemy extends Entity {
 	
 	boolean findclosestPoint = true;
 
-	public boolean isDead() {
-		return isDead;
-	}
-
 	/**
-	 * Creates a new enemy with full hitpoints at position x, y. The enemy moves
-	 * at (speed) (units) per second.
+	 * Creates a new enemy with full hitpoints at position x, y.
 	 * 
 	 */
 	public Enemy(int x, int y, int maxhp, int speed, MineTD g,
-			ImuteblePosition[] path) {
+			ImmutablePosition[] path) {
 		super(x, y, g);
 		this.maxhp = maxhp;
 		hp = maxhp;
@@ -104,17 +99,21 @@ public class Enemy extends Entity {
 	public int getMaxHealth() {
 		return maxhp;
 	}
-
-	/**
-	 * 
-	 */
-	public boolean isAlive() {
-		return (hp > 0);
+	
+	public boolean isDead() {
+		return isDead;
+	}
+	
+	public void takeDamage(float damage) {
+		hp-=damage;
+		if(hp<0){
+			playAnimation = true;
+		}
 	}
 
 	// Speed setters/getters
 	/**
-	 * Sets the movement speed of the unit, in terms of (TODO)
+	 * Sets the movement speed of the unit.
 	 */
 	public void setSpeed(int x) {
 		speed = x;
@@ -126,6 +125,7 @@ public class Enemy extends Entity {
 	public int getSpeed() {
 		return speed;
 	}
+	
 
 	// Update and draw methods
 	/**
@@ -139,11 +139,11 @@ public class Enemy extends Entity {
 			int closest = 0;
 			for(int i=0; i<path.length; i++){
 				if(dis>(path[i].manhatanDistance(
-						new ImuteblePosition((int)this.getPos().x, 
+						new ImmutablePosition((int)this.getPos().x, 
 												(int)this.getPos().y))))
 				{
 					dis = (path[i].manhatanDistance(
-							new ImuteblePosition((int)this.getPos().x, 
+							new ImmutablePosition((int)this.getPos().x, 
 									(int)this.getPos().y)));
 					closest = i;
 				}
@@ -214,7 +214,7 @@ public class Enemy extends Entity {
 				regionsExplosion[1][2], regionsExplosion[2][0],
 				regionsExplosion[2][1], regionsExplosion[2][2]);
 		explode.setPlayMode(Animation.LOOP);
-		ImuteblePosition[] p =getGame().getLevel().getPath(new ImuteblePosition((int)(getPos().x+0.5f), (int)(getPos().y+0.5f)),
+		ImmutablePosition[] p =getGame().getLevel().getPath(new ImmutablePosition((int)(getPos().x+0.5f), (int)(getPos().y+0.5f)),
 				getGame().getLevel().getFinish());
 		path = p==null?path:p.length<=0?path:p;
 		nextGoal = 0;
@@ -223,7 +223,7 @@ public class Enemy extends Entity {
 			
 			@Override
 			public void onTileRM(int x, int y, TileType t) {
-				ImuteblePosition[] p =getGame().getLevel().getPath(new ImuteblePosition((int)(getPos().x+0.5f), (int)(getPos().y+0.5f)),
+				ImmutablePosition[] p =getGame().getLevel().getPath(new ImmutablePosition((int)(getPos().x+0.5f), (int)(getPos().y+0.5f)),
 						getGame().getLevel().getFinish());
 				path = p==null?path:p.length<=0?path:p;
 				nextGoal = 0;
@@ -233,7 +233,7 @@ public class Enemy extends Entity {
 			
 			@Override
 			public void onTileAdded(int x, int y, TileType t) {
-				ImuteblePosition[] p =getGame().getLevel().getPath(new ImuteblePosition((int)(getPos().x+0.5f), (int)(getPos().y+0.5f)),
+				ImmutablePosition[] p =getGame().getLevel().getPath(new ImmutablePosition((int)(getPos().x+0.5f), (int)(getPos().y+0.5f)),
 						getGame().getLevel().getFinish());
 				path = p==null?path:p.length<=0?path:p;
 				nextGoal = 0;
@@ -243,12 +243,4 @@ public class Enemy extends Entity {
 		});
 	}
 
-	public void takeDamage(float damage) {
-		hp-=damage;
-		if(hp<0){
-			playAnimation = true;
-		}
-		// TODO Auto-generated method stub
-
-	}
 }

@@ -44,8 +44,9 @@ public class UIManager implements UIService {
 	private float w; // ui width
 	private int wave; // counter for enemy waves
 	
-	public UIManager(MineTD game) {
+	public UIManager(MineTD game, SpriteBatch batch) {
 		this.game = game;
+		this.batch = batch;
 	}
 	/**
 	 * {@inheritDoc UIService}
@@ -164,7 +165,7 @@ public class UIManager implements UIService {
 	 * {@inheritDoc UIService}
 	 */
 	@Override
-	public void Draw() {
+	public void Draw(SpriteBatch batch) {
 		MsgPrinter.act(Gdx.graphics.getDeltaTime());
 		MsgPrinter.Draw(batch);
 		stage.act(Gdx.graphics.getDeltaTime());

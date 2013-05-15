@@ -16,9 +16,9 @@ public class Dijkstra {
 	 * @param to
 	 * @return
 	 */
-	public static ImuteblePosition[] findPath(PositionGraph graph, ImuteblePosition from, ImuteblePosition to){
+	public static ImmutablePosition[] findPath(PositionGraph graph, ImmutablePosition from, ImmutablePosition to){
 		if(from.equals(to))
-			return new ImuteblePosition[]{};
+			return new ImmutablePosition[]{};
 		boolean[][] visited = new boolean[graph.getHight()][graph.getWidth()];
 		PriorityQueue<Path> alternetPaths = new PriorityQueue<Path>(10000);
 		
@@ -35,7 +35,7 @@ public class Dijkstra {
 					return bestPath.toArray();
 			
 			for(VertexIterator iter = graph.neighbors(bestPath.path.peek());iter.hasNext();){
-				ImuteblePosition next = iter.next();
+				ImmutablePosition next = iter.next();
 				
 				if(!visited[next.getY()][next.getX()]){
 					visited[next.getY()][next.getX()]=true;
@@ -46,7 +46,7 @@ public class Dijkstra {
 			}
 		}
 	//System.gc();
-		return new ImuteblePosition[]{};
+		return new ImmutablePosition[]{};
 	}
 	
 	
@@ -54,17 +54,17 @@ public class Dijkstra {
 		private float cost=0;
 		private float toGoal=0;
 		private final float balsnce= 1.2f;
-		private Stack<ImuteblePosition> path;
-		private ImuteblePosition goal;
+		private Stack<ImmutablePosition> path;
+		private ImmutablePosition goal;
 		@Override
 		public int compareTo(Path o) {
 			
 				//return (int)(cost-o.cost);
 			return (int)((cost+(toGoal*balsnce))-(o.cost+(o.toGoal*balsnce)));
 		}
-		public static Path make(ImuteblePosition g){
+		public static Path make(ImmutablePosition g){
 			Path result = new Path();
-			result.path = new Stack<ImuteblePosition>();
+			result.path = new Stack<ImmutablePosition>();
 			result.goal = g;
 			return result;
 		}
@@ -72,7 +72,7 @@ public class Dijkstra {
 		public Path clone() {
 			Path clone = new Path();
 			try{
-				clone.path=(Stack<ImuteblePosition>) path.clone();
+				clone.path=(Stack<ImmutablePosition>) path.clone();
 			}catch (Exception e) {
 					try {
 						throw new Exception("WTF, this is IMPOSSIBRUE"); // this is not helpful :3
@@ -85,7 +85,7 @@ public class Dijkstra {
 			clone.goal = goal;
 			return clone;
 		}
-		public Path add(ImuteblePosition node, PositionGraph graph){
+		public Path add(ImmutablePosition node, PositionGraph graph){
 			if(path.isEmpty()){
 				this.cost=0;
 				path.push(node);
@@ -97,24 +97,24 @@ public class Dijkstra {
 			path.push(node);
 			return this;
 		}
-		public ImuteblePosition[] toArray(){
-			ImuteblePosition[] result = new ImuteblePosition[path.size()];
+		public ImmutablePosition[] toArray(){
+			ImmutablePosition[] result = new ImmutablePosition[path.size()];
 			Object[] array = path.toArray(); 
 			for(int i=0;i<array.length; i++)
-				result[i]=(ImuteblePosition)array[i];
+				result[i]=(ImmutablePosition)array[i];
 			return result;
 		}
 		@Override
 		public String toString() {
 			StringBuilder s = new StringBuilder("[");
-			for(ImuteblePosition i: this.path)
+			for(ImmutablePosition i: this.path)
 				s.append(i+", ");
 			s.append("]");
 			return s.toString();
 		}
 	}
 	
-	public static float calcCost(ImuteblePosition a, ImuteblePosition b){
+	public static float calcCost(ImmutablePosition a, ImmutablePosition b){
 		return a.manhatanDistance(b);
 	}
 	

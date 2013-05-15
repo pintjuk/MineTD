@@ -22,7 +22,7 @@ public class PositionGraph {
 	 * from v to w; c is the cost assigned to this edge. The maps may be null
 	 * and are allocated only when needed.
 	 */
-	private final Hashtable<Integer, ArrayList<ImuteblePosition>> edges;
+	private final Hashtable<Integer, ArrayList<ImmutablePosition>> edges;
 	private float[][] cost;
 	public void setWidth(int width) {
 		this.width = width;
@@ -49,7 +49,7 @@ public class PositionGraph {
 			throw new IllegalArgumentException("w = " + w);
 		if (h < 0)
 			throw new IllegalArgumentException("h = " + h);
-		edges = new Hashtable<Integer, ArrayList<ImuteblePosition>>(w*h+1);
+		edges = new Hashtable<Integer, ArrayList<ImmutablePosition>>(w*h+1);
 		width=w;hight=h;
 		cost=new float[h*w][w*h];
 		
@@ -69,9 +69,9 @@ public class PositionGraph {
 	/**
 	 * Add an edge without checking parameters.
 	 */
-	private void addEdge(ImuteblePosition from, ImuteblePosition to) {
+	private void addEdge(ImmutablePosition from, ImmutablePosition to) {
 		if(edges.get(toKey(from))==null){
-			edges.put(toKey(from), new ArrayList<ImuteblePosition>());
+			edges.put(toKey(from), new ArrayList<ImmutablePosition>());
 		}
 		for(int i = 0; i<edges.get(toKey(from)).size();i++){
 			if(edges.get(toKey(from)).get(i).equals(to))
@@ -103,8 +103,8 @@ public class PositionGraph {
 	
 	static class VertecisIt implements VertexIterator{
 		int counter=0;
-		ArrayList<ImuteblePosition> v;
-		public VertecisIt(ArrayList<ImuteblePosition> vertecis){v=vertecis;}
+		ArrayList<ImmutablePosition> v;
+		public VertecisIt(ArrayList<ImmutablePosition> vertecis){v=vertecis;}
 		
 		 
 		public boolean hasNext() {
@@ -116,7 +116,7 @@ public class PositionGraph {
 		
 
 		@Override
-		public ImuteblePosition next() throws NoSuchElementException {
+		public ImmutablePosition next() throws NoSuchElementException {
 			if(!hasNext())
 				throw new NoSuchElementException();
 			return v.get(counter++);
@@ -128,7 +128,7 @@ public class PositionGraph {
 	 * {@inheritDoc Graph}
 	 */
 	 
-	public VertexIterator neighbors(ImuteblePosition v) {
+	public VertexIterator neighbors(ImmutablePosition v) {
 		return new VertecisIt( edges.get(toKey(v)));
 	}
 
@@ -136,10 +136,10 @@ public class PositionGraph {
 	 * {@inheritDoc Graph}
 	 */
 	 
-	public boolean hasEdge(ImuteblePosition v, ImuteblePosition w) {
+	public boolean hasEdge(ImmutablePosition v, ImmutablePosition w) {
 		if(edges.get(toKey(v))==null)
 			return false;
-		for(ImuteblePosition edg: edges.get(toKey(v))){
+		for(ImmutablePosition edg: edges.get(toKey(v))){
 			 if(edg.equals(w))
 				 return true;
 		}
@@ -150,7 +150,7 @@ public class PositionGraph {
 	 * 
 	 */
 	 
-	public float cost(ImuteblePosition from, ImuteblePosition to) {
+	public float cost(ImmutablePosition from, ImmutablePosition to) {
 		if(addInvariantchek(from, to))
 			throw new IllegalArgumentException("from or to is outside of the range of cornerns");
 		return this.cost[from.getX()+from.getY()][to.getX()+to.getY()];
@@ -163,7 +163,7 @@ public class PositionGraph {
 	 * checks that input invariants hold for add functions
 	 * returns fals if invarants hold
 	 */
-	private boolean addInvariantchek(ImuteblePosition v, ImuteblePosition w){
+	private boolean addInvariantchek(ImmutablePosition v, ImmutablePosition w){
 		return 0>v.getX()&&v.getX()>width&&
 				0>v.getY()&&v.getY()>hight&&
 				0>w.getX()&&w.getX()>width&&
@@ -174,7 +174,7 @@ public class PositionGraph {
 	 * {@inheritDoc Graph}
 	 */
 	 
-	public void add(ImuteblePosition from, ImuteblePosition to) {
+	public void add(ImmutablePosition from, ImmutablePosition to) {
 		if(addInvariantchek(from, to))
 			throw new IllegalArgumentException("from or to is outside of the range of cornerns");
 		this.addEdge(from, to);
@@ -186,7 +186,7 @@ public class PositionGraph {
 	/**
 	 * {@inheritDoc Graph}
 	 */
-	public void addBi(ImuteblePosition v, ImuteblePosition w) {
+	public void addBi(ImmutablePosition v, ImmutablePosition w) {
 		if(addInvariantchek(v,w))
 			throw new IllegalArgumentException("from or to is outside of the range of cornerns");
 		this.addEdge(v, w);
@@ -197,7 +197,7 @@ public class PositionGraph {
 	/**
 	 * {@inheritDoc Graph}
 	 */
-	public void remove(ImuteblePosition from, ImuteblePosition to) {
+	public void remove(ImmutablePosition from, ImmutablePosition to) {
 		if(addInvariantchek(from, to))
 			throw new IllegalArgumentException("from or to is outside of the range " +
 					"of cornerns");
@@ -208,7 +208,7 @@ public class PositionGraph {
 	/**
 	 * {@inheritDoc Graph}
 	 */
-	public void removeBi(ImuteblePosition v, ImuteblePosition w) {
+	public void removeBi(ImmutablePosition v, ImmutablePosition w) {
 		if(addInvariantchek(v, w))
 			throw new IllegalArgumentException("from or to is outside of the range" +
 					" of cornerns");
@@ -216,11 +216,11 @@ public class PositionGraph {
 		rmEdge(w,v);
 		
 	}
-	private void rmEdge(ImuteblePosition v, ImuteblePosition w){
+	private void rmEdge(ImmutablePosition v, ImmutablePosition w){
 		if(edges.get(toKey(v))==null)
 			return;
-		ImuteblePosition toremove=null;
-		for(ImuteblePosition i: edges.get(toKey(v))){
+		ImmutablePosition toremove=null;
+		for(ImmutablePosition i: edges.get(toKey(v))){
 			if(i.equals(w)){
 				toremove=i;
 				numEdges--;
@@ -267,13 +267,13 @@ public class PositionGraph {
 	int toKey(int x, int y){
 		return x+(y*(width+1));
 	}
-	int toKey(ImuteblePosition x){
+	int toKey(ImmutablePosition x){
 		return toKey(x.getX(), x.getY());
 	}
-	ImuteblePosition keyToPos(int key){
+	ImmutablePosition keyToPos(int key){
 		int x = key%width;
 		int y = (key-x)/width;
-		return new ImuteblePosition(x,y);
+		return new ImmutablePosition(x,y);
 	}
 	
 
@@ -285,10 +285,10 @@ public class PositionGraph {
 		links.clear();
 		for(int y= 0;y<getHight();y++){
 			for(int x= 0;x<getWidth();x++){
-				ArrayList<ImuteblePosition> nexts = edges.get(toKey(new ImuteblePosition(x, y)));
+				ArrayList<ImmutablePosition> nexts = edges.get(toKey(new ImmutablePosition(x, y)));
 				if(nexts==null)
 					continue;
-				for(ImuteblePosition b: nexts)
+				for(ImmutablePosition b: nexts)
 					this.links.add(new LinkDebug (x+0.5f, y+0.5f, b.getX()+0.4f, b.getY()+0.4f, 200));
 			}
 		}
@@ -300,22 +300,22 @@ public class PositionGraph {
 			}
 		}*/
 	}
-	public void removeAllLinksTo(ImuteblePosition to){
+	public void removeAllLinksTo(ImmutablePosition to){
 		 if(edges.get(toKey(to))!=null){
 			 numEdges-=edges.get(toKey(to)).size();
 			 edges.remove(toKey(to));
 		 }
 		 for(int y= 0;y<getHight();y++){
 			for(int x= 0;x<getWidth();x++){
-				ArrayList<ImuteblePosition> nexts = edges.get(toKey(new ImuteblePosition(x, y)));
-				ArrayList<ImuteblePosition> toremove= new ArrayList<>();
+				ArrayList<ImmutablePosition> nexts = edges.get(toKey(new ImmutablePosition(x, y)));
+				ArrayList<ImmutablePosition> toremove= new ArrayList<>();
 				if(nexts==null)
 					continue;
-				for(ImuteblePosition b: nexts){
+				for(ImmutablePosition b: nexts){
 					if(b.equals(to))
 						toremove.add(b);
 				}
-				for(ImuteblePosition b: toremove){
+				for(ImmutablePosition b: toremove){
 					nexts.remove(b);
 				}
 			}
