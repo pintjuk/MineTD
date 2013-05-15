@@ -26,83 +26,57 @@ import com.badlogic.gdx.math.Vector3;
 public class MineTD 
 	extends Game
 {
-	public OrthographicCamera getCamera() {
-		return camera;
-	}
-
-	public SpriteBatch getBatch() {
-	  return level.getRenderer().getSpriteBatch();
-	}
-
-	public InputMultiplexer getInMultiplexer() {
-		return InMultiplexer;
-	}
-
-	public AssetManager getAssetManager() {
-		return assetManager;
-	}
-
-	public MouseInputAdapter getInput() {
-		return input;
-	}
-
-	public GameMap getLevel() {
-		return level;
-	}
-
-	public PlayerStats getPlayerStats() {
-		return playerStats;
-	}
-
 	private OrthographicCamera camera;
-	private InputMultiplexer InMultiplexer;
+	private InputMultiplexer inputMultiplexer;
 	private AssetManager assetManager;
 	private MouseInputAdapter input;
-	private EnemyManager enemiesManager;
+	private EnemyManager enemyManager;
 	private GameMap level;
 	private BuildingManager buildingManager;
 	private UIManager uiManager;
 	private PlayerStats playerStats;
-	private SpriteBatch guiBatch;
 	private Music bgMusic;
-	private int w, h;
 	@Override
 	public void create() {
+		// Create field objects.
 		input = new MouseInputAdapter(this);
-		InMultiplexer = new InputMultiplexer();
-		Gdx.input.setInputProcessor(InMultiplexer);
-		enemiesManager = new EnemyManager(1, 0, this);
+		inputMultiplexer = new InputMultiplexer();
+		Gdx.input.setInputProcessor(inputMultiplexer);
+		enemyManager = new EnemyManager(1, 0, this);
 		buildingManager = new BuildingManager(this);
 		uiManager = new UIManager(this);
 		assetManager = new AssetManager();
 		playerStats = new PlayerStats(this);
-		guiBatch = new SpriteBatch();
-		loadAssets();
 		
+		loadAssets();
 		setupCam();
 		
+		// Initialize map.
 		level = new GameMap();
 		level.loadAssets(assetManager);
-
 		level.resetDebugDraw();
-		
-		input.init();
-		InMultiplexer.addProcessor(this.input);
-		
-		enemiesManager.init();
-		buildingManager.init();
-		uiManager.init();
 		camera.translate(new Vector2((float) level.getFinish().getX()-camera.position.x, (float)  level.getFinish().getY()-camera.position.y));
 		
+		// Initialize input processing.
+		input.init();
+		inputMultiplexer.addProcessor(this.input);
+		
+		// Initialize managers.
+		enemyManager.init();
+		buildingManager.init();
+		uiManager.init();
+		
+		// Set background music.
 		bgMusic = Gdx.audio.newMusic(Gdx.files.internal("data/bgmusic.mp3"));
 		bgMusic.setVolume(0.5f);
 		bgMusic.setLooping(true);
 		bgMusic.play();
 		
-		
+		// Display welcome text.
 		MsgPrinter.print("Welcome to MineTD!", 2f);
 		MsgPrinter.print("Good luck!", 5f);
-		MsgPrinter.print("", 5f);
+		
+		/*MsgPrinter.print("", 5f);
 		MsgPrinter.print("Build turrets by costracting squere units of 2x2 elements to defend the cacke agenst the ENEMY!", 30f);
 		MsgPrinter.print("Overlaping squer units will be part and bost the same turret.", 30f);
 		MsgPrinter.print("The upper left element of every squer will determen what stat will be boosted;", 30f);
@@ -114,10 +88,13 @@ public class MineTD
 		MsgPrinter.print("Use right muse button to build and mine, use the gui to select material for bulding.", 30f);
 		MsgPrinter.print("Hold down left mous button and drag to look around the map.", 30f);
 		MsgPrinter.print("", 30f);
-		MsgPrinter.print("Dont die, KILL THE ENEMY!", 30f);
+		MsgPrinter.print("Dont die, KILL THE ENEMY!", 30f);*/
 		 
 	}
 
+	/**
+	 * Loads game assets into the AssetManager.
+	 */
 	private void loadAssets() {
 		assetManager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
 		assetManager.load("data/pony.png", Texture.class);
@@ -127,14 +104,11 @@ public class MineTD
 		assetManager.load("data/map1.tmx", TiledMap.class);
 		assetManager.load("data/map2.tmx", TiledMap.class);
 		assetManager.finishLoading();
-	}
+	}	
 
-	public EnemyManager getEnemiesManager() {
-		return enemiesManager;
-	}
-
-	
-
+	/**
+	 * Sets up the camera to fill the game window.
+	 */
 	private void setupCam() {
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
@@ -157,28 +131,25 @@ public class MineTD
 	 */
 	@Override
 	public void render() {	
-		//update game
 		updateGame();
 		
-		//rander 
+		// Clear the screen.
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		level.Draw(camera);
-		//level.DrawPathGraph();
-		getBatch().begin();
-		enemiesManager.Draw(getBatch());
-		buildingManager.Draw(getBatch());
-		getBatch().end();
-		uiManager.Draw();
-		//guiBatch.begin();
-	//	buildingManager.Draw(guiBatch);
-		//guiBatch.end();
 		
+		level.Draw(camera);
+		//level.DrawPathGraph(); // Debug graph for map + unit pathing.
+		
+		getBatch().begin();
+		enemyManager.Draw(getBatch());
+		buildingManager.Draw(getBatch());
+		uiManager.Draw();
+		getBatch().end();
 	}
 
 	private void updateGame() {
 		camera.update();
-		enemiesManager.Update();
+		enemyManager.Update();
 		buildingManager.Update();
 		uiManager.Update();
 		if(playerStats.getLives() <=0)
@@ -196,6 +167,41 @@ public class MineTD
 
 	@Override
 	public void resume() {
+	}
+	
+	public OrthographicCamera getCamera() {
+		return camera;
+	}
+
+	/**
+	 * Returns the EnemyManager.
+	 */
+	public EnemyManager getEnemiesManager() {
+		return enemyManager;
+	}
+	
+	public SpriteBatch getBatch() {
+	  return level.getRenderer().getSpriteBatch();
+	}
+
+	public InputMultiplexer getInMultiplexer() {
+		return inputMultiplexer;
+	}
+
+	public AssetManager getAssetManager() {
+		return assetManager;
+	}
+
+	public MouseInputAdapter getInput() {
+		return input;
+	}
+
+	public GameMap getLevel() {
+		return level;
+	}
+
+	public PlayerStats getPlayerStats() {
+		return playerStats;
 	}
 
 	
