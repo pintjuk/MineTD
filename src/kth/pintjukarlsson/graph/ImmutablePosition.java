@@ -1,7 +1,6 @@
 package kth.pintjukarlsson.graph;
 
 import com.badlogic.gdx.math.Vector2;
-import com.sun.jndi.url.iiopname.iiopnameURLContextFactory;
 
 public class ImmutablePosition {
 	private int x;

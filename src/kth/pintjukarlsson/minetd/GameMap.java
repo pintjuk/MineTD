@@ -3,25 +3,17 @@ package kth.pintjukarlsson.minetd;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.crypto.Cipher;
-
-import kth.pintjukarlsson.debugdraw.LinkDebug;
 import kth.pintjukarlsson.graph.Dijkstra;
 import kth.pintjukarlsson.graph.ImmutablePosition;
 import kth.pintjukarlsson.graph.PositionGraph;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Vector2;
 
 public class GameMap {
 	public ImmutablePosition getSpan() {

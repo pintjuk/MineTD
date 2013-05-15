@@ -1,11 +1,7 @@
 package kth.pintjukarlsson.graph;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 import kth.pintjukarlsson.debugdraw.LinkDebug;

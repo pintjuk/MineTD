@@ -2,11 +2,6 @@ package kth.pintjukarlsson.minetd;
 
 import java.util.HashMap;
 
-import kth.pintjukarlsson.minetd.listeners.MapInteractionListener;
-
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
 
 public class PlayerStats {
 	

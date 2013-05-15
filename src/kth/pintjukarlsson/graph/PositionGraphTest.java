@@ -1,14 +1,10 @@
 package kth.pintjukarlsson.graph;
 
-import static org.junit.Assert.*;
-
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
 import junit.framework.TestCase;
-
-import org.junit.Test;
 
 public class PositionGraphTest extends TestCase {	
 	protected PositionGraph g0, g1, g5;

@@ -3,22 +3,12 @@ package kth.pintjukarlsson.minetd;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Pixmap.Format;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 /**
  * Contains the Graphical User Interface.
@@ -42,11 +32,10 @@ public class UIManager implements UIService {
 	
 	private float h; // ui height
 	private float w; // ui width
-	private int wave; // counter for enemy waves
+	//private int wave; // counter for enemy waves
 	
-	public UIManager(MineTD game, SpriteBatch batch) {
+	public UIManager(MineTD game) {
 		this.game = game;
-		this.batch = batch;
 	}
 	/**
 	 * {@inheritDoc UIService}
@@ -61,7 +50,7 @@ public class UIManager implements UIService {
 		float y = 0;
 
 		// initialize fields
-		wave = 1;
+		//wave = 1;
 		batch = new SpriteBatch();
 		stage = new Stage(w, h, true, batch);
 		materialButtons = new ArrayList<>();
@@ -88,16 +77,16 @@ public class UIManager implements UIService {
 		skin.setEnabled(waveButton, false);
 		//table.add(waveButton).top();
 		//table.row();
-		waveButton.addListener(new ChangeListener() {
+		/*waveButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-			/*	if (game.getEnemiesManager().spawnWave()) {
+				if (game.getEnemiesManager().spawnWave()) {
 					wave++;
 					waveLabel.setText("Wave: " + wave);
 					skin.setEnabled(waveButton, false);
-				}*/
+				}
 			}
-		});
+		});*/
 		livesLabel = new Label("Lives: " + game.getPlayerStats().getLives(), skin);
 		table.add(livesLabel).expand().top();
 		table.row();
@@ -108,7 +97,6 @@ public class UIManager implements UIService {
 
 		// Create buttons for each TileType using the "default" TextButtonStyle.
 		for (TileType tt : PlayerStats.getUsableTiles()) {
-			//int amount = game.getPlayerStats().getAmount(tt);
 			TextButton button = new TextButton(tt.toString() + "[0]", skin);
 			button.setName(tt.toString());
 			materialButtons.add(button);
@@ -125,14 +113,13 @@ public class UIManager implements UIService {
 			button.addListener(new ChangeListener() {
 				@Override
 				public void changed(ChangeEvent event, Actor actor) {
-					// TODO - select tile type to place + visual indication
+					// Indicate that -this- button is disabled
 					for (final TextButton button : materialButtons) {
 						skin.setEnabled(button,  true);
 					}
 					skin.setEnabled(button,  false);
+					// Set tile selection in playerstats
 					game.getPlayerStats().setSelect(button.getName());
-					//System.out.println("Clicked! Is checked: " + button.isChecked());
-					//button.setText("Good job!");
 				}
 			});
 		}
@@ -165,7 +152,7 @@ public class UIManager implements UIService {
 	 * {@inheritDoc UIService}
 	 */
 	@Override
-	public void Draw(SpriteBatch batch) {
+	public void Draw() {
 		MsgPrinter.act(Gdx.graphics.getDeltaTime());
 		MsgPrinter.Draw(batch);
 		stage.act(Gdx.graphics.getDeltaTime());
