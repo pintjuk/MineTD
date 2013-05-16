@@ -38,11 +38,11 @@ public class MineTD
 	private OrthographicCamera camera;
 	private InputMultiplexer inputMultiplexer;
 	private AssetManager assetManager;
-	private MouseInputAdapter input;
+	private MouseInputAdapterService input;
 	private EnemyManagerService enemyManager;
 	private GameMapService level;
-	private BuildingManager buildingManager;
-	private UIManager uiManager;
+	private BuildingManagerService buildingManager;
+	private UIService uiManager;
 	private PlayerStatsService playerStats;
 	private Music bgMusic;
 	private float w, h;
@@ -73,7 +73,7 @@ public class MineTD
 		
 		// Initialize input processing.
 		input.init();
-		inputMultiplexer.addProcessor(this.input);
+		inputMultiplexer.addProcessor(this.input.getProcessor());
 		
 		// Initialize managers.
 		enemyManager.init();

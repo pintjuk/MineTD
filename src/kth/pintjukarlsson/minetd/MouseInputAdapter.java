@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 
@@ -119,5 +120,10 @@ public class MouseInputAdapter extends InputAdapter implements MouseInputAdapter
 	@Override
 	public void setMapInteractionListener(MapInteractionListener m){
 		milisteners.add(m);
+	}
+
+	@Override
+	public InputProcessor getProcessor() {
+		return this;
 	}
 }

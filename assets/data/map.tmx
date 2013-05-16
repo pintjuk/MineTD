@@ -29,7 +29,7 @@
   </tile>
   <tile id="39">
    <properties>
-    <property name="type" value="gold"/>
+    <property name="type" value="goldB"/>
    </properties>
   </tile>
   <tile id="64">

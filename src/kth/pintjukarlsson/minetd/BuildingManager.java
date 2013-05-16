@@ -9,7 +9,11 @@ import kth.pintjukarlsson.minetd.interfaces.GameMapService;
 import kth.pintjukarlsson.minetd.interfaces.GameService;
 import kth.pintjukarlsson.minetd.interfaces.MouseInputAdapterService;
 import kth.pintjukarlsson.minetd.listeners.MapInteractionListener;
-
+/**
+ * 
+ * @author pintjuk&karlsson
+ *
+ */
 public class BuildingManager implements BuildingManagerService{
 	
 	
@@ -17,12 +21,13 @@ public class BuildingManager implements BuildingManagerService{
 	private final GameService game;
 	private MouseInputAdapterService input;
 	private GameMapService map;
-	private final BuildingManager THIS = this;
+	private final BuildingManager MAMMA = this;
 	public BuildingManager(GameService game) {
 		buildings = new ArrayList<>();
 		this.game = game;
 		
 	}
+	@Override
 	public void init(){
 		input = game.getInput();
 		map = game.getLevel();
@@ -95,21 +100,21 @@ public class BuildingManager implements BuildingManagerService{
 
 			private void addToBuildingOreNewBuilding(Stat stat) {
 				
-				Building b = THIS.getBuildingWithStatAt(stat.getX()-1, stat.getY()+1);
+				Building b = MAMMA.getBuildingWithStatAt(stat.getX()-1, stat.getY()+1);
 				if(b ==null)
-					     b = THIS.getBuildingWithStatAt(stat.getX(), stat.getY()+1);
+					     b = MAMMA.getBuildingWithStatAt(stat.getX(), stat.getY()+1);
 				if(b ==null)
-						 b = THIS.getBuildingWithStatAt(stat.getX()+1, stat.getY()+1);
+						 b = MAMMA.getBuildingWithStatAt(stat.getX()+1, stat.getY()+1);
 				if(b ==null)
-					 b = THIS.getBuildingWithStatAt(stat.getX()-1, stat.getY());
+					 b = MAMMA.getBuildingWithStatAt(stat.getX()-1, stat.getY());
 				if(b ==null)
-					 b = THIS.getBuildingWithStatAt(stat.getX()+1, stat.getY());
+					 b = MAMMA.getBuildingWithStatAt(stat.getX()+1, stat.getY());
 				if(b ==null)
-					 b = THIS.getBuildingWithStatAt(stat.getX()-1, stat.getY()-1);
+					 b = MAMMA.getBuildingWithStatAt(stat.getX()-1, stat.getY()-1);
 				if(b ==null)
-					 b = THIS.getBuildingWithStatAt(stat.getX(), stat.getY()-1);
+					 b = MAMMA.getBuildingWithStatAt(stat.getX(), stat.getY()-1);
 				if(b ==null)
-					b = THIS.getBuildingWithStatAt(stat.getX()+1, stat.getY()-1);
+					b = MAMMA.getBuildingWithStatAt(stat.getX()+1, stat.getY()-1);
 				if(b ==null){
 					b = new Building(0, 0, game);
 					buildings.add(b);

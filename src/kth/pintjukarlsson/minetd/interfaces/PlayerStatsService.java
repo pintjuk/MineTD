@@ -37,9 +37,24 @@ public interface PlayerStatsService {
 	 * @param name
 	 */
 	void setSelect(String name);
+	/**
+	 * 
+	 */
 	void popEnergy();
+	/**
+	 * 
+	 */
 	boolean hasEnergy();
+	/**
+	 * 
+	 * @return
+	 */
 	TileType getSelect();
+	/**
+	 * 
+	 * @param string
+	 * @param i
+	 */
 	void addAmount(String string, int i);
 
 }

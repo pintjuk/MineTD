@@ -10,7 +10,7 @@ public enum TileType {
 	BEDROCK(4,3, 15),
 	SAND(4,3, 5),
 	STONE(33,103, 1.5f),
-	GOLD(40, 65, 6),
+	GOLD(65, 40, 6),
 	IRON(66, 424, 2),
 	LAVA(6,6, 20);
 	private int index;
