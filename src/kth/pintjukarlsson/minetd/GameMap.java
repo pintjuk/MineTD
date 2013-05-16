@@ -3,42 +3,34 @@ package kth.pintjukarlsson.minetd;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.crypto.Cipher;
-
-import kth.pintjukarlsson.debugdraw.LinkDebug;
 import kth.pintjukarlsson.graph.Dijkstra;
-import kth.pintjukarlsson.graph.ImuteblePosition;
+import kth.pintjukarlsson.graph.ImmutablePosition;
 import kth.pintjukarlsson.graph.PositionGraph;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Vector2;
 
 public class GameMap {
-	public ImuteblePosition getSpan() {
+	public ImmutablePosition getSpan() {
 		return span;
 	}
-	public ImuteblePosition getFinish() {
+	public ImmutablePosition getFinish() {
 		return finish;
 	}
 	
-	private HashMap<ImuteblePosition, Float> activeLavaBricks= new HashMap<>();
+	private HashMap<ImmutablePosition, Float> activeLavaBricks= new HashMap<>();
 
 	private TiledMap map;
 	private OrthogonalTiledMapRenderer renderer;
 	private PositionGraph graph;
 	private TiledMapTileLayer pathingLayer;
-	private ImuteblePosition span, finish; 
-	private ImuteblePosition[] pathGoalToFinish;
+	private ImmutablePosition span, finish; 
+	private ImmutablePosition[] pathGoalToFinish;
 	
 	public OrthogonalTiledMapRenderer getRenderer(){
 		return  renderer;
@@ -51,14 +43,14 @@ public class GameMap {
 	}
 	
 	public void Draw(OrthographicCamera camera){
-		ArrayList<ImuteblePosition> torm= new ArrayList<ImuteblePosition>();
-		for(ImuteblePosition t: activeLavaBricks.keySet()){
+		ArrayList<ImmutablePosition> torm= new ArrayList<ImmutablePosition>();
+		for(ImmutablePosition t: activeLavaBricks.keySet()){
 			activeLavaBricks.put(t, activeLavaBricks.get(t)-Gdx.graphics.getDeltaTime());
 			if (activeLavaBricks.get(t)<=0){
 				torm.add(t);
 			}
 		}
-		for(ImuteblePosition t: torm){
+		for(ImmutablePosition t: torm){
 			floawLava(t);
 			Cell c = new Cell();
 			c.setTile(map.getTileSets().getTile(462));
@@ -69,23 +61,23 @@ public class GameMap {
 		renderer.render();
 	}
 	
-	private void floawLava(ImuteblePosition t) {
+	private void floawLava(ImmutablePosition t) {
 		int x = t.getX();
 		int y= t.getY();
 		int h=pathingLayer.getHeight();
 		int w= pathingLayer.getWidth();
 		
 		if(this.pathingLayer.getCell(x+1, y)==null &&x<w){
-			this.activeLavaBricks.put(new ImuteblePosition(x+1, y), 0.8f);
+			this.activeLavaBricks.put(new ImmutablePosition(x+1, y), 0.8f);
 		}
 		if(this.pathingLayer.getCell(x-1, y)==null&&x>0)
-			this.activeLavaBricks.put(new ImuteblePosition(x-1, y), 0.8f);
+			this.activeLavaBricks.put(new ImmutablePosition(x-1, y), 0.8f);
 			
 		if(this.pathingLayer.getCell(x, y+1)==null&&y<h)
-			this.activeLavaBricks.put(new ImuteblePosition(x, y+1), 0.8f);
+			this.activeLavaBricks.put(new ImmutablePosition(x, y+1), 0.8f);
 			
 		if(this.pathingLayer.getCell(x, y-1)==null&&y>0)
-			this.activeLavaBricks.put(new ImuteblePosition(x, y-1), 0.8f);
+			this.activeLavaBricks.put(new ImmutablePosition(x, y-1), 0.8f);
 			
 	}
 	public void DrawPathGraph(){
@@ -115,14 +107,14 @@ public class GameMap {
 					}else{
 						if(cell.getTile().getProperties().get("type")!=null)
 							if(cell.getTile().getProperties().get("type").equals("finish")){
-								finish = new ImuteblePosition(x, y);
+								finish = new ImmutablePosition(x, y);
 								setGraphTile(x, y, layer);
 								((TiledMapTileLayer)map.getLayers().get(1)).setCell(x, y, cell);
 								pathingLayer.setCell(x, y, null);
 							}
 						if(cell.getTile().getProperties().get("type")!=null)
 							if(cell.getTile().getProperties().get("type").equals("start")){
-								span = new ImuteblePosition(x, y);
+								span = new ImmutablePosition(x, y);
 								setGraphTile(x, y, layer);
 								((TiledMapTileLayer)map.getLayers().get(1)).setCell(x, y, cell);
 								pathingLayer.setCell(x, y, null);
@@ -146,9 +138,9 @@ public class GameMap {
 	 * returns true if the tile was set sucsesfuly 
 	 */
 	public boolean setTile(TileType tile, int x, int y){
-		if (getPath(new ImuteblePosition(x, y), this.finish).length==0)
+		if (getPath(new ImmutablePosition(x, y), this.finish).length==0)
 			return false;
-		graph.removeAllLinksTo(new ImuteblePosition(x, y));
+		graph.removeAllLinksTo(new ImmutablePosition(x, y));
 		int length = calcPathStartToFinish().length;
 		if(length==0){
 			setGraphTile(x, y, pathingLayer);
@@ -188,16 +180,16 @@ public class GameMap {
 		
 		if(this.pathingLayer.getCell(x+1, y)!=null &&x<w)
 			if(pathingLayer.getCell(x+1, y).getTile().getId() ==462)
-				this.activeLavaBricks.put(new ImuteblePosition(x+1, y), 0.8f);
+				this.activeLavaBricks.put(new ImmutablePosition(x+1, y), 0.8f);
 		if(this.pathingLayer.getCell(x-1, y)!=null&&x>0)
 			if(pathingLayer.getCell(x-1, y).getTile().getId() ==462)
-				this.activeLavaBricks.put(new ImuteblePosition(x-1, y), 0.8f);
+				this.activeLavaBricks.put(new ImmutablePosition(x-1, y), 0.8f);
 		if(this.pathingLayer.getCell(x, y+1)!=null&&y<h)
 			if(pathingLayer.getCell(x, y+1).getTile().getId() ==462)
-				this.activeLavaBricks.put(new ImuteblePosition(x, y+1), 0.8f);
+				this.activeLavaBricks.put(new ImmutablePosition(x, y+1), 0.8f);
 		if(this.pathingLayer.getCell(x, y-1)!=null&&y>0)
 			if(pathingLayer.getCell(x, y-1).getTile().getId() ==462)
-				this.activeLavaBricks.put(new ImuteblePosition(x, y-1), 0.8f);
+				this.activeLavaBricks.put(new ImmutablePosition(x, y-1), 0.8f);
 				
 		
 	}
@@ -205,27 +197,27 @@ public class GameMap {
 		int h=this.pathingLayer.getHeight();
 		int w= this.pathingLayer.getWidth();
 		
-		if(new ImuteblePosition(x+1, y).equals(finish))
+		if(new ImmutablePosition(x+1, y).equals(finish))
 			return true;
-		if(new ImuteblePosition(x-1, y).equals(finish))
+		if(new ImmutablePosition(x-1, y).equals(finish))
 			return true;
-		if(new ImuteblePosition(x, y+1).equals(finish))
+		if(new ImmutablePosition(x, y+1).equals(finish))
 			return true;
-		if(new ImuteblePosition(x, y-1).equals(finish))
+		if(new ImmutablePosition(x, y-1).equals(finish))
 			return true;
 		
 		if(this.pathingLayer.getCell(x+1, y)==null &&x<w){
-			if(getPath(new ImuteblePosition(x+1, y), this.finish).length>0)
+			if(getPath(new ImmutablePosition(x+1, y), this.finish).length>0)
 				return true;
 		}
 		if(this.pathingLayer.getCell(x-1, y)==null&&x>0)
-			if(getPath(new ImuteblePosition(x-1, y), this.finish).length>0)
+			if(getPath(new ImmutablePosition(x-1, y), this.finish).length>0)
 				return true;
 		if(this.pathingLayer.getCell(x, y+1)==null&&y<h)
-			if(getPath(new ImuteblePosition(x, y+1), this.finish).length>0)
+			if(getPath(new ImmutablePosition(x, y+1), this.finish).length>0)
 				return true;
 		if(this.pathingLayer.getCell(x, y-1)==null&&y>0)
-			if(getPath(new ImuteblePosition(x, y-1), this.finish).length>0)
+			if(getPath(new ImmutablePosition(x, y-1), this.finish).length>0)
 				return true;
 		return false;
 		
@@ -240,13 +232,13 @@ public class GameMap {
 		int w= layer.getWidth();
 		
 		if(layer.getCell(x+1, y)==null &&x<w)
-			graph.addBi(new ImuteblePosition(x, y), new ImuteblePosition(x+1, y));
+			graph.addBi(new ImmutablePosition(x, y), new ImmutablePosition(x+1, y));
 		if(layer.getCell(x-1, y)==null&&x>0)
-			graph.addBi(new ImuteblePosition(x, y), new ImuteblePosition(x-1, y));
+			graph.addBi(new ImmutablePosition(x, y), new ImmutablePosition(x-1, y));
 		if(layer.getCell(x, y+1)==null&&y<h)
-			graph.addBi(new ImuteblePosition(x, y), new ImuteblePosition(x, y+1));
+			graph.addBi(new ImmutablePosition(x, y), new ImmutablePosition(x, y+1));
 		if(layer.getCell(x, y-1)==null&&y>0)
-			graph.addBi(new ImuteblePosition(x, y), new ImuteblePosition(x, y-1));
+			graph.addBi(new ImmutablePosition(x, y), new ImmutablePosition(x, y-1));
 		
 		//there seems to be bugs in deagonal links 
 		
@@ -272,17 +264,17 @@ public class GameMap {
 	
 		
 	}
-	public ImuteblePosition[] getPath(ImuteblePosition a, ImuteblePosition b){
+	public ImmutablePosition[] getPath(ImmutablePosition a, ImmutablePosition b){
 		return Dijkstra.findPath(graph, a, b);
 	}
 	
-	public ImuteblePosition[] calcPathStartToFinish(){
+	public ImmutablePosition[] calcPathStartToFinish(){
 		 return getPath(this.span, this.finish);
 	}
 	public void updatePothStartToFinish(){
 		pathGoalToFinish = calcPathStartToFinish();
 	}
-	public ImuteblePosition[] getPathStartToFinish(){
+	public ImmutablePosition[] getPathStartToFinish(){
 		return this.pathGoalToFinish;
 	}
 	

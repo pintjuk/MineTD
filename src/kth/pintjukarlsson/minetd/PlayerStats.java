@@ -2,27 +2,19 @@ package kth.pintjukarlsson.minetd;
 
 import java.util.HashMap;
 
-import kth.pintjukarlsson.minetd.listeners.MapInteractionListener;
-
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import kth.pintjukarlsson.minetd.interfaces.GameService;
+import kth.pintjukarlsson.minetd.interfaces.PlayerStatsService;
 
 
-public class PlayerStats {
+public class PlayerStats implements PlayerStatsService{
 	
 	private int energy = 8;
 	private HashMap<TileType, Integer> resourceMap;
 	private TileType tileSelected = tilesforselect[0];
 	private static TileType[] tilesforselect= new TileType[]{TileType.DIRT, TileType.GRAVEL, TileType.STONE, TileType.IRON, TileType.GOLD};
-	private MineTD game;
 	private int lives = 10;
-	//private GameMap map;
-	private MouseInputAdapter input;
-	public PlayerStats(MineTD game){
-		this.game = game;
-		//this.map =this.game.getLevel();
-		input = game.getInput();
-		
+	
+	public PlayerStats(){
 		resourceMap = new HashMap<>();
 		for (TileType tt : tilesforselect) {
 			switch (tt) {
@@ -52,6 +44,7 @@ public class PlayerStats {
 	 * Tilename String. If there's no usable TileType defined with
 	 * such a name, we throw an IllegalArgumentException.
 	 */
+	@Override
 	public void setSelect(String tilename){
 		for (TileType tt : tilesforselect) {
 			if (tilename.equals(tt.toString())) {
@@ -68,39 +61,33 @@ public class PlayerStats {
 	public TileType getSelect() {
 		return tileSelected;
 	}
-	/*
-	 * return energy
+	/**
+	 * returns energy
 	 */
+	@Override
 	public int getEnergy()
 	{
 		return energy;
 	}
 	
+	@Override
 	public boolean hasEnergy(){
 		if(energy<=0)
 			return false;
 		return true;
 	}
+	@Override
 	public void popEnergy(){
 		energy--;
 	}
+	@Override
 	public void pushEnergy(){
 		energy++;
 	}
-	
+	@Override
 	public int getLives() {
 		return lives;
 	}
-
-//	public TileType popSelected(){
-//		if(resourceCount[selected]<=0)
-//			return null;
-//		resourceCount[selected]--;
-//		return tilesforselect[selected];
-//	}
-	//public void Draw(SpriteBatch batch){
-	//	font.draw(batch, "hej", 10, 10);
-	//}
 	
 	/**
 	 * Returns the current amount of the specified TileType.

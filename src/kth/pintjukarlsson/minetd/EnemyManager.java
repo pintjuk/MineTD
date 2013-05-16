@@ -3,11 +3,10 @@ package kth.pintjukarlsson.minetd;
 import java.util.ArrayList;
 import java.util.Random;
 
-import kth.pintjukarlsson.graph.ImuteblePosition;
+import kth.pintjukarlsson.graph.ImmutablePosition;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.Map;
 import com.badlogic.gdx.math.Vector2;
 
 public class EnemyManager {
@@ -20,21 +19,23 @@ public class EnemyManager {
 	private int numEnemies;
 	private int enemyHP;
 	private int enemySpeed;
+	
 	private int hordCount=0;
 	private float timeToNextEnemy = 1;
 	private float elpesdtimeToNextEenemy=0;
-	private float timeToNext=1;
-	private int hordEnemyCount = 0;
-	private int hordEnemies = 3;
-	private float timeToNextHord = 6;
-	private float elepcedTimebetwineHords = 0;
+	
+	private int hordeEnemyCount = 0;
+	private int hordeEnemies = 3;
+	private float hordeElapsedTime = 0;
+	private float timeToNextHorde = 6;
+	
 	
 	private MineTD game;
-	private PlayerStats pStat;
-	private ImuteblePosition[] startToGoal;
+	private PlayerStats playerStats;
+	private ImmutablePosition[] startToGoal;
 	private Random rand = new Random(545454545);
 	private boolean timeout;
-	private boolean runTimoutCloc; 
+	private boolean runTimeoutClock; 
 	/**
 	 *  Creates a new enemy manager that spawns stuff at the location x, y.
 	 *  It starts out with some default values, including half the maximum number of enemies.
@@ -43,9 +44,9 @@ public class EnemyManager {
 		spawnPos = new int[] {x, y};
 		enemies = new ArrayList<Enemy>();
 		numEnemies = MAX_ENEMIES/2;
-		startToGoal = new ImuteblePosition[]{ new ImuteblePosition(0, 0),
-											  new ImuteblePosition(1, 2),
-											  new ImuteblePosition(1, 4)};
+		startToGoal = new ImmutablePosition[]{ new ImmutablePosition(0, 0),
+											  new ImmutablePosition(1, 2),
+											  new ImmutablePosition(1, 4)};
 		game = g;
 		enemyHP = 12;
 		enemySpeed = 2;
@@ -76,37 +77,37 @@ public class EnemyManager {
 	private boolean spawn() {
 		if(!timeout){
 			elpesdtimeToNextEenemy+=Gdx.graphics.getDeltaTime();
-		if(elpesdtimeToNextEenemy>timeToNext)
+		if(elpesdtimeToNextEenemy>timeToNextEnemy)
 		{
-			hordEnemyCount++;
+			hordeEnemyCount++;
 			enemies.add(new Enemy(startToGoal[0].getX(), startToGoal[0].getY(), (int) (enemyHP+rand.nextInt(hordCount+1)+Math.log(hordCount)), (int)(this.enemySpeed+((float)rand.nextInt(hordCount+1))/10f),game,this.startToGoal));
 			elpesdtimeToNextEenemy=0;
 			timeToNextEnemy = rand.nextInt(2)+0.1f;
-			if(hordEnemyCount>=hordEnemies){
-				hordEnemyCount=0;
+			if(hordeEnemyCount>=hordeEnemies){
+				hordeEnemyCount=0;
 				hordCount++;
-				hordEnemies = rand.nextInt(hordCount+10)+3;
+				hordeEnemies = rand.nextInt(hordCount+10)+3;
 				timeout = true;
-				runTimoutCloc =false;
+				runTimeoutClock =false;
 			}
 		}
 		}else{
-			if(runTimoutCloc)
-				elepcedTimebetwineHords+=Gdx.graphics.getDeltaTime();
-			if(elepcedTimebetwineHords>= timeToNextHord){
-				elepcedTimebetwineHords=0;
+			if(runTimeoutClock)
+				hordeElapsedTime+=Gdx.graphics.getDeltaTime();
+			if(hordeElapsedTime>= timeToNextHorde){
+				hordeElapsedTime=0;
 				timeout=false;
 				MsgPrinter.print("Enemies inbound", 4);
 			}
 		}
 		if(enemies.size()==0)
-			runTimoutCloc = true;
+			runTimeoutClock = true;
 		
 		return true;
 	}
 	public void init(){
 		this.startToGoal =  game.getLevel().getPathStartToFinish();
-		this.pStat = game.getPlayerStats();
+		this.playerStats = game.getPlayerStats();
 		
 		
 	}
@@ -116,11 +117,11 @@ public class EnemyManager {
 		for (Enemy e : enemies){
 			e.Update();
 			if(e.isDead()){
-				pStat.pushEnergy();
+				playerStats.pushEnergy();
 				torm.add(e);
 			}
 			if(e.getPos().epsilonEquals(startToGoal[startToGoal.length-1].getVec(),0.4f)){
-				pStat.reduseLives();
+				playerStats.reduseLives();
 				torm.add(e);
 			}
 		}

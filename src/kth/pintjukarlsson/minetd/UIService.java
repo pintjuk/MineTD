@@ -1,6 +1,5 @@
 package kth.pintjukarlsson.minetd;
 
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public interface UIService
