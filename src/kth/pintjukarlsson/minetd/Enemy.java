@@ -3,6 +3,7 @@ package kth.pintjukarlsson.minetd;
 import java.util.Random;
 
 import kth.pintjukarlsson.graph.ImmutablePosition;
+import kth.pintjukarlsson.minetd.interfaces.GameService;
 import kth.pintjukarlsson.minetd.listeners.MapInteractionListener;
 
 import com.badlogic.gdx.Gdx;
@@ -43,7 +44,7 @@ public class Enemy extends Entity {
 	 * Creates a new enemy with full hitpoints at position x, y.
 	 * 
 	 */
-	public Enemy(int x, int y, int maxhp, int speed, MineTD g,
+	public Enemy(int x, int y, int maxhp, int speed, GameService g,
 			ImmutablePosition[] path) {
 		super(x, y, g);
 		this.maxhp = maxhp;
@@ -89,7 +90,7 @@ public class Enemy extends Entity {
 	/**
 	 * Returns the current number of hitpoints.
 	 */
-	public int getHealth() {
+	public float getHealth() {
 		return hp;
 	}
 

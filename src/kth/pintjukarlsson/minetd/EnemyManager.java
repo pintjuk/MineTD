@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import kth.pintjukarlsson.graph.ImmutablePosition;
+import kth.pintjukarlsson.minetd.interfaces.EnemyManagerService;
+import kth.pintjukarlsson.minetd.interfaces.GameService;
+import kth.pintjukarlsson.minetd.interfaces.PlayerStatsService;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-public class EnemyManager {
+public class EnemyManager implements EnemyManagerService {
 
 	private final static int MAX_ENEMIES = 30;
 	private int[] spawnPos;
@@ -30,8 +33,8 @@ public class EnemyManager {
 	private float timeToNextHorde = 6;
 	
 	
-	private MineTD game;
-	private PlayerStats playerStats;
+	private GameService game;
+	private PlayerStatsService playerStats;
 	private ImmutablePosition[] startToGoal;
 	private Random rand = new Random(545454545);
 	private boolean timeout;
@@ -40,7 +43,7 @@ public class EnemyManager {
 	 *  Creates a new enemy manager that spawns stuff at the location x, y.
 	 *  It starts out with some default values, including half the maximum number of enemies.
 	 */
-	public EnemyManager(int x, int y, MineTD g) {
+	public EnemyManager(int x, int y, GameService g) {
 		spawnPos = new int[] {x, y};
 		enemies = new ArrayList<Enemy>();
 		numEnemies = MAX_ENEMIES/2;
@@ -51,26 +54,7 @@ public class EnemyManager {
 		enemyHP = 12;
 		enemySpeed = 2;
 	}
-	
-	// Spawns a new wave of enemies in a square at the default spawn location.
-	// (Only spawn a wave if the previous wave is cleared.) 
-	// Returns true if successful. 
-	/*public boolean spawnWave() {
-		if (enemies.size() != 0)
-			return false;
-		int side = (int)Math.ceil(Math.sqrt(numEnemies)); // side of square
-		for (int i=0; i<numEnemies; i++) {
-			int x = spawnPos[0]+(i%side);
-			int y = spawnPos[1]+(i/side);
-			enemies.add(new Enemy(x, y, enemyHP, enemySpeed, game, startToGoal));
-		}
-		// Increase difficulty parameters for next wave
-		enemyHP *= 1.5;
-		enemySpeed += 1;
-		if (numEnemies < MAX_ENEMIES)
-			numEnemies++;
-		return true;
-	}*/
+
 	
 	
 	
@@ -105,14 +89,16 @@ public class EnemyManager {
 		
 		return true;
 	}
+	@Override
 	public void init(){
 		this.startToGoal =  game.getLevel().getPathStartToFinish();
 		this.playerStats = game.getPlayerStats();
 		
 		
 	}
-	// Runs the Update() method for each existing enemy
-	public void Update() {
+	// Runs the update() method for each existing enemy
+	@Override
+	public void update() {
 		ArrayList<Enemy> torm = new ArrayList<Enemy>();
 		for (Enemy e : enemies){
 			e.Update();
@@ -130,11 +116,8 @@ public class EnemyManager {
 		
 		spawn();
 	}
-	// Runs the Draw() method for each existing enemy
-	public void Draw(SpriteBatch batch) {
-		for (Enemy e : enemies)
-			e.Draw(batch);
-	}
+	
+	@Override
 	public Enemy getClosestTo(Vector2 v){
 		Enemy closest=null;
 		float dis = 100000000;
@@ -151,5 +134,12 @@ public class EnemyManager {
 
 	public ArrayList<Enemy> getEnemies() {
 		return enemies;
+	}
+
+	// Runs the Draw() method for each existing enemy
+	@Override
+	public void draw(SpriteBatch batch) {
+		for (Enemy e : enemies)
+			e.Draw(batch);
 	}
 }

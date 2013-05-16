@@ -2,6 +2,9 @@ package kth.pintjukarlsson.minetd;
 
 import java.util.ArrayList;
 
+import kth.pintjukarlsson.minetd.interfaces.GameService;
+import kth.pintjukarlsson.minetd.interfaces.UIService;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -23,7 +26,7 @@ public class UIManager implements UIService {
 	private Stage stage;
 	private SpriteBatch batch;
 	private ArrayList<TextButton> materialButtons;
-	private MineTD game;
+	private GameService game;
 	
 	private Label numEnemiesLabel;
 	private TextButton waveButton;
@@ -34,7 +37,7 @@ public class UIManager implements UIService {
 	private float w; // ui width
 	//private int wave; // counter for enemy waves
 	
-	public UIManager(MineTD game) {
+	public UIManager(GameService game) {
 		this.game = game;
 	}
 	/**
@@ -67,7 +70,7 @@ public class UIManager implements UIService {
 		stage.addActor(table);
 		
 		// Create wave info / controls
-		final Label waveLabel = new Label("Wave: " + wave, skin);
+		final Label waveLabel = new Label("Wave: " , skin);
 		//table.add(waveLabel).top();
 		//table.row();
 		numEnemiesLabel = new Label("Enemies: " + game.getEnemiesManager().getEnemies().size(), skin);
@@ -135,7 +138,8 @@ public class UIManager implements UIService {
 		stage.setViewport(width, h, true);
 	}
 	
-	public void Update() {
+	@Override
+	public void update() {
 		int numEnemies = game.getEnemiesManager().getEnemies().size(); 
 		numEnemiesLabel.setText("Enemies: " + numEnemies);
 		if (numEnemies == 0)
@@ -152,7 +156,7 @@ public class UIManager implements UIService {
 	 * {@inheritDoc UIService}
 	 */
 	@Override
-	public void Draw() {
+	public void draw(SpriteBatch batch) {
 		MsgPrinter.act(Gdx.graphics.getDeltaTime());
 		MsgPrinter.Draw(batch);
 		stage.act(Gdx.graphics.getDeltaTime());

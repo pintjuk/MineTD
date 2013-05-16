@@ -5,7 +5,11 @@ import java.util.Iterator;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
+/**
+ * 
+ * @author Markus Karlsson
+ *
+ */
 public class MsgPrinter {
 
 	private static BitmapFont font = new BitmapFont();

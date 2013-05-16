@@ -6,22 +6,20 @@ import java.util.HashMap;
 import kth.pintjukarlsson.graph.Dijkstra;
 import kth.pintjukarlsson.graph.ImmutablePosition;
 import kth.pintjukarlsson.graph.PositionGraph;
+import kth.pintjukarlsson.minetd.interfaces.GameMapService;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
-public class GameMap {
-	public ImmutablePosition getSpan() {
-		return span;
-	}
-	public ImmutablePosition getFinish() {
-		return finish;
-	}
+public class GameMap implements GameMapService {
+	
+
 	
 	private HashMap<ImmutablePosition, Float> activeLavaBricks= new HashMap<>();
 
@@ -32,9 +30,7 @@ public class GameMap {
 	private ImmutablePosition span, finish; 
 	private ImmutablePosition[] pathGoalToFinish;
 	
-	public OrthogonalTiledMapRenderer getRenderer(){
-		return  renderer;
-	}
+	
 	void init(){
 		renderer = new OrthogonalTiledMapRenderer(map, 1f /16f);
 		
@@ -42,7 +38,23 @@ public class GameMap {
 								  ((TiledMapTileLayer)map.getLayers().get(1)).getWidth());
 	}
 	
-	public void Draw(OrthographicCamera camera){
+	@Override
+	public ImmutablePosition getSpan() {
+		return span;
+	}
+	
+	@Override
+	public ImmutablePosition getFinish() {
+		return finish;
+	}
+	
+	@Override
+	public OrthogonalTiledMapRenderer getRenderer(){
+		return  renderer;
+	}
+	
+	@Override
+	public void draw(OrthographicCamera camera){
 		ArrayList<ImmutablePosition> torm= new ArrayList<ImmutablePosition>();
 		for(ImmutablePosition t: activeLavaBricks.keySet()){
 			activeLavaBricks.put(t, activeLavaBricks.get(t)-Gdx.graphics.getDeltaTime());
@@ -59,6 +71,14 @@ public class GameMap {
 		}
 		renderer.setView(camera);
 		renderer.render();
+	}
+	
+	@Override
+	public TileType getTileType(int x, int y){
+		Cell c = pathingLayer.getCell(x, y);
+		if(c==null)
+			return null;
+		return TileType.get(c.getTile().getId());
 	}
 	
 	private void floawLava(ImmutablePosition t) {
@@ -80,18 +100,14 @@ public class GameMap {
 			this.activeLavaBricks.put(new ImmutablePosition(x, y-1), 0.8f);
 			
 	}
-	public void DrawPathGraph(){
+	
+	void DrawPathGraph(){
 		
 		graph.DibugDraw();
 		
 	}
 	
-	public TileType getTileType(int x, int y){
-		Cell c = pathingLayer.getCell(x, y);
-		if(c==null)
-			return null;
-		return TileType.get(c.getTile().getId());
-	}
+	
 
 	private void buildGraph(){
 			
@@ -137,6 +153,7 @@ public class GameMap {
 	 * @return
 	 * returns true if the tile was set sucsesfuly 
 	 */
+	@Override
 	public boolean setTile(TileType tile, int x, int y){
 		if (getPath(new ImmutablePosition(x, y), this.finish).length==0)
 			return false;
@@ -152,10 +169,16 @@ public class GameMap {
 		
 		pathingLayer.setCell(x, y, cell);
 		graph.reBuildDibugImg();
-		updatePothStartToFinish();
+		updatePathStartToFinish();
 		return true;
 	}
-	
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	@Override
 	public TileType  removeTile( int x, int y){
 		TileType t = getTileType(x, y);
 		if(!hasNullNighbour(x,y))
@@ -165,12 +188,49 @@ public class GameMap {
 		
 		setGraphTile(x, y, pathingLayer);
 		graph.reBuildDibugImg();
-		updatePothStartToFinish();
+		updatePathStartToFinish();
 		
 		handleNighboreLava(x,y);
 		return t;
 	}
+	@Override
+	public ImmutablePosition[] getPath(ImmutablePosition a, ImmutablePosition b){
+		return Dijkstra.findPath(graph, a, b);
+	}
+	@Override
+	public ImmutablePosition[] calcPathStartToFinish(){
+		 return getPath(this.span, this.finish);
+	}
+	@Override
+	public void updatePathStartToFinish(){
+		pathGoalToFinish = calcPathStartToFinish();
+	}
+	@Override
+	public ImmutablePosition[] getPathStartToFinish(){
+		return this.pathGoalToFinish;
+	}
 	
+	@Override
+	public void loadAssets(AssetManager assetManager){
+		map = assetManager.get("data/map.tmx");
+		pathingLayer = (TiledMapTileLayer) map.getLayers().get(2);
+		init();
+		buildGraph();
+		updatePathStartToFinish();
+	}
+	@Override
+	public boolean hasBuilt(int x, int y) {
+		Cell c = pathingLayer.getCell(x, y);
+		if(c != null)
+			if(c instanceof BuildingCell)
+				return true;
+		return false;
+	}
+	
+	@Override
+	public boolean spotFree(int x, int y){
+		return pathingLayer.getCell(x, y)==null;
+	}
 	
 	private void handleNighboreLava(int x, int y) {
 		int h=this.pathingLayer.getHeight();
@@ -223,10 +283,6 @@ public class GameMap {
 		
 	}
 	
-	public boolean spotFree(int x, int y){
-		return pathingLayer.getCell(x, y)==null;
-	}
-	
 	private void setGraphTile(int x , int y, TiledMapTileLayer layer){
 		int h=layer.getHeight();
 		int w= layer.getWidth();
@@ -264,36 +320,9 @@ public class GameMap {
 	
 		
 	}
-	public ImmutablePosition[] getPath(ImmutablePosition a, ImmutablePosition b){
-		return Dijkstra.findPath(graph, a, b);
-	}
-	
-	public ImmutablePosition[] calcPathStartToFinish(){
-		 return getPath(this.span, this.finish);
-	}
-	public void updatePothStartToFinish(){
-		pathGoalToFinish = calcPathStartToFinish();
-	}
-	public ImmutablePosition[] getPathStartToFinish(){
-		return this.pathGoalToFinish;
-	}
-	
-	public void loadAssets(AssetManager assetManager){
-		map = assetManager.get("data/map.tmx");
-		pathingLayer = (TiledMapTileLayer) map.getLayers().get(2);
-		init();
-		buildGraph();
-		updatePothStartToFinish();
-	}
-	
-	public void resetDebugDraw(){
+	void resetDebugDraw(){
 		graph.reBuildDibugImg();
 	}
-	public boolean hasBuilt(int x, int y) {
-		Cell c = pathingLayer.getCell(x, y);
-		if(c != null)
-			if(c instanceof BuildingCell)
-				return true;
-		return false;
-	}
+
+	
 }

@@ -1,5 +1,7 @@
 package kth.pintjukarlsson.minetd;
 
+import kth.pintjukarlsson.minetd.interfaces.GameService;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -12,9 +14,9 @@ public abstract class Entity {
 	
 	private Vector2 pos;
 	private Texture texture;
-	private MineTD game;
+	private GameService game;
 	
-	protected MineTD getGame(){
+	protected GameService getGame(){
 		return game;
 	}
 	
@@ -26,7 +28,7 @@ public abstract class Entity {
 		this.texture = texture;
 	}
 
-	public Entity(int x, int y, MineTD g) {
+	public Entity(int x, int y, GameService g) {
 		pos = new Vector2(x, y);
 		game = g;
 	}

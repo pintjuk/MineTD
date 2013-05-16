@@ -6,13 +6,18 @@ import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
+
+import kth.pintjukarlsson.minetd.interfaces.GameMapService;
+import kth.pintjukarlsson.minetd.interfaces.GameService;
+import kth.pintjukarlsson.minetd.interfaces.MouseInputAdapterService;
+import kth.pintjukarlsson.minetd.interfaces.PlayerStatsService;
 import kth.pintjukarlsson.minetd.listeners.*;
 
-public class MouseInputAdapter extends InputAdapter {
+public class MouseInputAdapter extends InputAdapter implements MouseInputAdapterService{
 	private OrthographicCamera camera;
-	private GameMap level;
-	private MineTD game;
-	private PlayerStats pStats;
+	private GameMapService level;
+	private GameService game;
+	private PlayerStatsService pStats;
 	final Vector3 curr = new Vector3();
 	final Vector3 last = new Vector3(-1, -1, -1);
 	final Vector3 delta = new Vector3();
@@ -22,10 +27,11 @@ public class MouseInputAdapter extends InputAdapter {
 	
 	private boolean initilized= false;
 
-	public MouseInputAdapter (MineTD g) {
+	public MouseInputAdapter (GameService g) {
 		this.game = g;
 	}
 	
+	@Override
 	public void init(){
 		this.camera = game.getCamera();
 		this.level = game.getLevel();
@@ -110,6 +116,7 @@ public class MouseInputAdapter extends InputAdapter {
 		return super.mouseMoved(screenX, screenY);
 	}
 	
+	@Override
 	public void setMapInteractionListener(MapInteractionListener m){
 		milisteners.add(m);
 	}

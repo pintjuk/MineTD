@@ -2,6 +2,9 @@ package kth.pintjukarlsson.minetd;
 
 import java.util.ArrayList;
 
+import kth.pintjukarlsson.minetd.interfaces.EnemyManagerService;
+import kth.pintjukarlsson.minetd.interfaces.GameService;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
@@ -31,7 +34,7 @@ public class Building extends Entity {
 	private static Texture firetile;
 	private TextureRegion bullet;
 	private AssetManager assetManager;
-	private EnemyManager enemies;
+	private EnemyManagerService enemies;
 	private Vector2 ameDir=Vector2.X;
 	private float internalTime=0;
 	private float firetime=0;
@@ -39,7 +42,7 @@ public class Building extends Entity {
 	private boolean playfire=false;
 	private boolean bFire=false;
 	
-	public Building(int x, int y, MineTD g) {
+	public Building(int x, int y, GameService g) {
 		super(x, y, g);
 	}
 	

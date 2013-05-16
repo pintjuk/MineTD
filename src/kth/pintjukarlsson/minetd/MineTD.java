@@ -2,6 +2,7 @@ package kth.pintjukarlsson.minetd;
 
 import java.util.logging.Level;
 
+import kth.pintjukarlsson.minetd.interfaces.*;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -32,16 +33,17 @@ import com.badlogic.gdx.math.Vector3;
  */
 public class MineTD 
 	extends Game
+	implements GameService 
 {
 	private OrthographicCamera camera;
 	private InputMultiplexer inputMultiplexer;
 	private AssetManager assetManager;
 	private MouseInputAdapter input;
-	private EnemyManager enemyManager;
-	private GameMap level;
+	private EnemyManagerService enemyManager;
+	private GameMapService level;
 	private BuildingManager buildingManager;
 	private UIManager uiManager;
-	private PlayerStats playerStats;
+	private PlayerStatsService playerStats;
 	private Music bgMusic;
 	private float w, h;
 	
@@ -58,7 +60,7 @@ public class MineTD
 		buildingManager = new BuildingManager(this);
 		uiManager = new UIManager(this);
 		assetManager = new AssetManager();
-		playerStats = new PlayerStats(this);
+		playerStats = new PlayerStats();
 		
 		loadAssets();
 		setupCam();
@@ -66,7 +68,7 @@ public class MineTD
 		// Initialize map and interface.
 		level = new GameMap();
 		level.loadAssets(assetManager);
-		level.resetDebugDraw();
+		//level.resetDebugDraw();
 		camera.translate(new Vector2((float) level.getFinish().getX()-camera.position.x, (float)  level.getFinish().getY()-camera.position.y));
 		
 		// Initialize input processing.
@@ -88,7 +90,7 @@ public class MineTD
 		MsgPrinter.print("Welcome to MineTD!", 2f);
 		MsgPrinter.print("Good luck!", 5f);
 		
-		/*MsgPrinter.print("", 5f);
+		MsgPrinter.print("", 5f);
 		MsgPrinter.print("Build turrets by costracting squere units of 2x2 elements to defend the cacke agenst the ENEMY!", 30f);
 		MsgPrinter.print("Overlaping squer units will be part and bost the same turret.", 30f);
 		MsgPrinter.print("The upper left element of every squer will determen what stat will be boosted;", 30f);
@@ -100,7 +102,7 @@ public class MineTD
 		MsgPrinter.print("Use right muse button to build and mine, use the gui to select material for bulding.", 30f);
 		MsgPrinter.print("Hold down left mous button and drag to look around the map.", 30f);
 		MsgPrinter.print("", 30f);
-		MsgPrinter.print("Dont die, KILL THE ENEMY!", 30f);*/
+		MsgPrinter.print("Dont die, KILL THE ENEMY!", 30f);
 		 
 	}
 
@@ -151,15 +153,15 @@ public class MineTD
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
-		level.Draw(camera);
+		level.draw(camera);
 		//level.DrawPathGraph(); // Debug graph for map + unit pathing.
 		
 		// Sending Draw jobs to our SpriteBatch.
-		getBatch().begin();
-		enemyManager.Draw(getBatch());
-		buildingManager.Draw(getBatch());
-		getBatch().end();
-		uiManager.Draw();
+		getMapBatch().begin();
+		enemyManager.draw(getMapBatch());
+		buildingManager.draw(getMapBatch());
+		getMapBatch().end();
+		uiManager.draw(getMapBatch());
 	}
 
 	/**
@@ -167,9 +169,9 @@ public class MineTD
 	 */
 	private void updateGame() {
 		camera.update();
-		enemyManager.Update();
-		buildingManager.Update();
-		uiManager.Update();
+		enemyManager.update();
+		buildingManager.update();
+		uiManager.update();
 		if(playerStats.getLives() <=0)
 			throw new YouAreDeadException();
 	}
@@ -188,35 +190,37 @@ public class MineTD
 	}
 	
 	// Various get methods
+	@Override
 	public OrthographicCamera getCamera() {
 		return camera;
+		
 	}
-
-	public EnemyManager getEnemiesManager() {
+	@Override
+	public EnemyManagerService getEnemiesManager() {
 		return enemyManager;
 	}
-	
-	public SpriteBatch getBatch() {
+	@Override
+	public SpriteBatch getMapBatch() {
 	  return level.getRenderer().getSpriteBatch();
 	}
-
+	@Override
 	public InputMultiplexer getInputMultiplexer() {
 		return inputMultiplexer;
 	}
-
+	@Override
 	public AssetManager getAssetManager() {
 		return assetManager;
 	}
-
-	public MouseInputAdapter getInput() {
+	@Override
+	public MouseInputAdapterService getInput() {
 		return input;
 	}
-
-	public GameMap getLevel() {
+	@Override
+	public GameMapService getLevel() {
 		return level;
 	}
-
-	public PlayerStats getPlayerStats() {
+	@Override
+	public PlayerStatsService getPlayerStats() {
 		return playerStats;
 	}
 

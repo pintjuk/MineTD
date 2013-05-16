@@ -4,17 +4,21 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import kth.pintjukarlsson.minetd.interfaces.BuildingManagerService;
+import kth.pintjukarlsson.minetd.interfaces.GameMapService;
+import kth.pintjukarlsson.minetd.interfaces.GameService;
+import kth.pintjukarlsson.minetd.interfaces.MouseInputAdapterService;
 import kth.pintjukarlsson.minetd.listeners.MapInteractionListener;
 
-public class BuildingManager {
+public class BuildingManager implements BuildingManagerService{
 	
 	
 	private ArrayList<Building> buildings;
-	private final MineTD game;
-	private MouseInputAdapter input;
-	private GameMap map;
+	private final GameService game;
+	private MouseInputAdapterService input;
+	private GameMapService map;
 	private final BuildingManager THIS = this;
-	public BuildingManager(MineTD game) {
+	public BuildingManager(GameService game) {
 		buildings = new ArrayList<>();
 		this.game = game;
 		
@@ -114,7 +118,7 @@ public class BuildingManager {
 			}
 		});
 	}
-	public void removeAllStatsAtt(int x, int y){
+	private void removeAllStatsAtt(int x, int y){
 		ArrayList<Building> torm = new ArrayList<>();
 		for (Building b : buildings) {
 			b.removeStatsThahHave(x, y);
@@ -126,7 +130,7 @@ public class BuildingManager {
 			buildings.remove(b);
 	}
 	
-	public Building getBuildingWithStatAt(int x, int y){
+	private Building getBuildingWithStatAt(int x, int y){
 		for (Building b : buildings) {
 			if(b.hasStat(x,y))
 				return b;
@@ -134,17 +138,24 @@ public class BuildingManager {
 		return null;
 	}
 
-	// Runs the Update method for each existing Building
-	public void Update() {
-		for (Building b : buildings) {
-			b.Update();
-		}
-	}
-	// Runs the Draw method for each existing Building
-	public void Draw(SpriteBatch batch) {
-		for (Building b : buildings) {
+	/**Runs the Draw method for each existing Building
+	 * 
+	 * @param batch
+	 */
+	@Override
+	public void draw(SpriteBatch batch) {
+		for (Building b : buildings)
 			b.Draw(batch);
-		}
+		
+	}
+	/** Runs the Update method for each existing Building
+	 * 
+	 */
+	@Override
+	public void update() {
+		for (Building b : buildings)
+			b.Update();
+		
 	}
 	
 }
